@@ -3,34 +3,55 @@
 
 import { useState } from "react";
 
-type Education = {
+export type Education = {
   id: number;
+  institution: string;
+  degree: string;
+  startDate: string;
+  endDate: string;
   ongoing: boolean;
 };
 
-export default function EducationSection() {
-  const [educations, setEducations] = useState<Education[]>([]);
+type EducationSectionProps = {
+  value: Education[];
+  onChange: (educations: Education[]) => void;
+};
+
+export default function EducationSection({
+  value,
+  onChange,
+}: EducationSectionProps) {
   const [nextId, setNextId] = useState(1);
 
   function addEducation() {
-    setEducations((previous) => [
-      ...previous,
-      { id: nextId, ongoing: false },
+    onChange([
+      ...value,
+      {
+        id: nextId,
+        institution: "",
+        degree: "",
+        startDate: "",
+        endDate: "",
+        ongoing: false,
+      },
     ]);
+
     setNextId((previous) => previous + 1);
   }
 
   function removeEducation(id: number) {
-    setEducations((previous) =>
-      previous.filter((education) => education.id !== id)
-    );
+    onChange(value.filter((education) => education.id !== id));
   }
 
-  function toggleOngoing(id: number, checked: boolean) {
-    setEducations((previous) =>
-      previous.map((education) =>
+  function updateEducation(
+    id: number,
+    field: keyof Education,
+    newValue: string | boolean
+  ) {
+    onChange(
+      value.map((education) =>
         education.id === id
-          ? { ...education, ongoing: checked }
+          ? { ...education, [field]: newValue }
           : education
       )
     );
@@ -49,7 +70,7 @@ export default function EducationSection() {
         Adaugă studiile relevante pentru CV-ul tău.
       </p>
 
-      {educations.map((education, index) => (
+      {value.map((education, index) => (
         <div
           key={education.id}
           className="mt-6 border-t border-gray-700 pt-6"
@@ -70,48 +91,92 @@ export default function EducationSection() {
 
           <div className="mt-4 grid gap-5 sm:grid-cols-2">
             <div className="sm:col-span-2">
-              <label htmlFor={`institution-${education.id}`} className="block text-sm">
+              <label
+                htmlFor={`institution-${education.id}`}
+                className="block text-sm"
+              >
                 Instituție de învățământ
               </label>
               <input
                 id={`institution-${education.id}`}
                 type="text"
+                value={education.institution}
+                onChange={(e) =>
+                  updateEducation(
+                    education.id,
+                    "institution",
+                    e.target.value
+                  )
+                }
                 placeholder="Ex: Universitatea Babeș-Bolyai"
                 className={inputClass}
               />
             </div>
 
             <div className="sm:col-span-2">
-              <label htmlFor={`degree-${education.id}`} className="block text-sm">
+              <label
+                htmlFor={`degree-${education.id}`}
+                className="block text-sm"
+              >
                 Diplomă / Specializare
               </label>
               <input
                 id={`degree-${education.id}`}
                 type="text"
+                value={education.degree}
+                onChange={(e) =>
+                  updateEducation(
+                    education.id,
+                    "degree",
+                    e.target.value
+                  )
+                }
                 placeholder="Ex: Licență în Informatică"
                 className={inputClass}
               />
             </div>
 
             <div>
-              <label htmlFor={`educationStart-${education.id}`} className="block text-sm">
+              <label
+                htmlFor={`educationStart-${education.id}`}
+                className="block text-sm"
+              >
                 Data începerii
               </label>
               <input
                 id={`educationStart-${education.id}`}
                 type="month"
+                value={education.startDate}
+                onChange={(e) =>
+                  updateEducation(
+                    education.id,
+                    "startDate",
+                    e.target.value
+                  )
+                }
                 className={inputClass}
               />
             </div>
 
             {!education.ongoing && (
               <div>
-                <label htmlFor={`educationEnd-${education.id}`} className="block text-sm">
+                <label
+                  htmlFor={`educationEnd-${education.id}`}
+                  className="block text-sm"
+                >
                   Data încheierii
                 </label>
                 <input
                   id={`educationEnd-${education.id}`}
                   type="month"
+                  value={education.endDate}
+                  onChange={(e) =>
+                    updateEducation(
+                      education.id,
+                      "endDate",
+                      e.target.value
+                    )
+                  }
                   className={inputClass}
                 />
               </div>
@@ -122,9 +187,24 @@ export default function EducationSection() {
             <input
               type="checkbox"
               checked={education.ongoing}
-              onChange={(event) =>
-                toggleOngoing(education.id, event.target.checked)
-              }
+
+              onChange={(e) => {
+  const checked = e.target.checked;
+
+  onChange(
+    value.map((item) =>
+      item.id === education.id
+        ? {
+            ...item,
+            ongoing: checked,
+            endDate: checked ? "" : item.endDate,
+          }
+        : item
+    )
+  );
+}}
+
+
             />
             Studiez aici în prezent
           </label>

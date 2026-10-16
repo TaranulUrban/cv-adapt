@@ -1,12 +1,31 @@
 
 "use client";
 
-import { useState } from "react";
+export type JobData = {
+  jobUrl: string;
+  jobDescription: string;
+  cvLanguage: "ro" | "en";
+};
 
-export default function JobSection() {
-  const [jobUrl, setJobUrl] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
-  const [cvLanguage, setCvLanguage] = useState("ro");
+type JobSectionProps = {
+  value: JobData;
+  onChange: (job: JobData) => void;
+};
+
+export default function JobSection({
+  value,
+  onChange,
+}: JobSectionProps) {
+  const { jobUrl, jobDescription, cvLanguage } = value;
+
+  function updateJob(field: keyof JobData, newValue: string) {
+    onChange({
+      ...value,
+      [field]: newValue,
+    });
+  }
+
+
 
   return (
     <section className="mt-8 rounded-xl border border-gray-700 p-6">
@@ -30,7 +49,7 @@ export default function JobSection() {
           id="jobUrl"
           type="url"
           value={jobUrl}
-          onChange={(event) => setJobUrl(event.target.value)}
+          onChange={(event) => updateJob("jobUrl", event.target.value)}
           placeholder="https://www.linkedin.com/jobs/view/..."
           className="mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3"
         />
@@ -51,7 +70,7 @@ export default function JobSection() {
           id="jobDescription"
           rows={8}
           value={jobDescription}
-          onChange={(event) => setJobDescription(event.target.value)}
+          onChange={(event) => updateJob("jobDescription", event.target.value)}
           placeholder="Copiază aici responsabilitățile și cerințele postului..."
           className="mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3"
         />
@@ -65,7 +84,7 @@ export default function JobSection() {
         <select
           id="cvLanguage"
           value={cvLanguage}
-          onChange={(event) => setCvLanguage(event.target.value)}
+          onChange={(event) => updateJob("cvLanguage", event.target.value)}
           className="mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3"
         >
           <option value="ro" className="bg-gray-900">

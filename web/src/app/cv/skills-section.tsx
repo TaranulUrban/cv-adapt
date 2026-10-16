@@ -3,8 +3,17 @@
 
 import { useState } from "react";
 
-export default function SkillsSection() {
-  const [skills, setSkills] = useState<string[]>([]);
+    type SkillsSectionProps = {
+    value: string[];
+    onChange: (skills: string[]) => void;
+    };
+
+    export default function SkillsSection({
+    value: skills,
+    onChange,
+    }: SkillsSectionProps) {
+
+
   const [newSkill, setNewSkill] = useState("");
 
   function addSkill() {
@@ -16,14 +25,12 @@ export default function SkillsSection() {
       return;
     }
 
-    setSkills((previous) => [...previous, skill]);
+    onChange([...skills, skill]);
     setNewSkill("");
   }
 
-  function removeSkill(skill: string) {
-    setSkills((previous) =>
-      previous.filter((item) => item !== skill)
-    );
+    function removeSkill(skill: string) {
+    onChange(skills.filter((item) => item !== skill));
   }
 
   return (

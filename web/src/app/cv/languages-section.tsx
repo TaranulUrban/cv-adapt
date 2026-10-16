@@ -3,10 +3,15 @@
 
 import { useState } from "react";
 
-type Language = {
+export type Language = {
   id: number;
   name: string;
   level: string;
+};
+
+type LanguagesSectionProps = {
+  value: Language[];
+  onChange: (languages: Language[]) => void;
 };
 
 const levels = [
@@ -19,13 +24,15 @@ const levels = [
   { value: "native", label: "Limbă maternă" },
 ];
 
-export default function LanguagesSection() {
-  const [languages, setLanguages] = useState<Language[]>([]);
+export default function LanguagesSection({
+  value,
+  onChange,
+}: LanguagesSectionProps) {
   const [nextId, setNextId] = useState(1);
 
   function addLanguage() {
-    setLanguages((previous) => [
-      ...previous,
+    onChange([
+      ...value,
       { id: nextId, name: "", level: "B1" },
     ]);
     setNextId((previous) => previous + 1);
@@ -34,21 +41,19 @@ export default function LanguagesSection() {
   function updateLanguage(
     id: number,
     field: "name" | "level",
-    value: string
+    newValue: string
   ) {
-    setLanguages((previous) =>
-      previous.map((language) =>
+    onChange(
+      value.map((language) =>
         language.id === id
-          ? { ...language, [field]: value }
+          ? { ...language, [field]: newValue }
           : language
       )
     );
   }
 
   function removeLanguage(id: number) {
-    setLanguages((previous) =>
-      previous.filter((language) => language.id !== id)
-    );
+    onChange(value.filter((language) => language.id !== id));
   }
 
   const inputClass =
@@ -61,10 +66,10 @@ export default function LanguagesSection() {
       </h2>
 
       <p className="mt-2 text-sm text-gray-400">
-        Adaugă limbile pe care le cunoști și nivelul tău real.
+        Adaugă limbile cunoscute și nivelul tău real.
       </p>
 
-      {languages.map((language, index) => (
+      {value.map((language, index) => (
         <div
           key={language.id}
           className="mt-6 border-t border-gray-700 pt-6"
@@ -95,11 +100,11 @@ export default function LanguagesSection() {
                 id={`language-${language.id}`}
                 type="text"
                 value={language.name}
-                onChange={(event) =>
+                onChange={(e) =>
                   updateLanguage(
                     language.id,
                     "name",
-                    event.target.value
+                    e.target.value
                   )
                 }
                 placeholder="Ex: Engleză"
@@ -117,11 +122,11 @@ export default function LanguagesSection() {
               <select
                 id={`level-${language.id}`}
                 value={language.level}
-                onChange={(event) =>
+                onChange={(e) =>
                   updateLanguage(
                     language.id,
                     "level",
-                    event.target.value
+                    e.target.value
                   )
                 }
                 className={inputClass}

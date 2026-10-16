@@ -3,34 +3,57 @@
 
 import { useState } from "react";
 
-type Experience = {
+export type Experience = {
   id: number;
+  jobTitle: string;
+  company: string;
+  startDate: string;
+  endDate: string;
   current: boolean;
+  description: string;
 };
 
-export default function ExperienceSection() {
-  const [experiences, setExperiences] = useState<Experience[]>([]);
+type ExperienceSectionProps = {
+  value: Experience[];
+  onChange: (experiences: Experience[]) => void;
+};
+
+export default function ExperienceSection({
+  value,
+  onChange,
+}: ExperienceSectionProps) {
   const [nextId, setNextId] = useState(1);
 
   function addExperience() {
-    setExperiences((previous) => [
-      ...previous,
-      { id: nextId, current: false },
+    onChange([
+      ...value,
+      {
+        id: nextId,
+        jobTitle: "",
+        company: "",
+        startDate: "",
+        endDate: "",
+        current: false,
+        description: "",
+      },
     ]);
+
     setNextId((previous) => previous + 1);
   }
 
   function removeExperience(id: number) {
-    setExperiences((previous) =>
-      previous.filter((experience) => experience.id !== id)
-    );
+    onChange(value.filter((experience) => experience.id !== id));
   }
 
-  function toggleCurrent(id: number, checked: boolean) {
-    setExperiences((previous) =>
-      previous.map((experience) =>
+  function updateExperience(
+    id: number,
+    field: keyof Experience,
+    newValue: string | boolean
+  ) {
+    onChange(
+      value.map((experience) =>
         experience.id === id
-          ? { ...experience, current: checked }
+          ? { ...experience, [field]: newValue }
           : experience
       )
     );
@@ -46,12 +69,11 @@ export default function ExperienceSection() {
       </h2>
 
       <p className="mt-2 text-sm text-gray-400">
-        Adaugă locurile de muncă relevante pentru CV-ul tău.
-        Dacă nu ai experiență profesională, poți lăsa această
-        secțiune necompletată.
+        Adaugă experiențele tale profesionale.
+        Dacă nu ai experiență, poți lăsa secțiunea goală.
       </p>
 
-      {experiences.map((experience, index) => (
+      {value.map((experience, index) => (
         <div
           key={experience.id}
           className="mt-6 border-t border-gray-700 pt-6"
@@ -81,6 +103,14 @@ export default function ExperienceSection() {
               <input
                 id={`jobTitle-${experience.id}`}
                 type="text"
+                value={experience.jobTitle}
+                onChange={(e) =>
+                  updateExperience(
+                    experience.id,
+                    "jobTitle",
+                    e.target.value
+                  )
+                }
                 placeholder="Ex: Project Manager"
                 className={inputClass}
               />
@@ -96,6 +126,14 @@ export default function ExperienceSection() {
               <input
                 id={`company-${experience.id}`}
                 type="text"
+                value={experience.company}
+                onChange={(e) =>
+                  updateExperience(
+                    experience.id,
+                    "company",
+                    e.target.value
+                  )
+                }
                 placeholder="Ex: Compania ABC"
                 className={inputClass}
               />
@@ -111,6 +149,14 @@ export default function ExperienceSection() {
               <input
                 id={`startDate-${experience.id}`}
                 type="month"
+                value={experience.startDate}
+                onChange={(e) =>
+                  updateExperience(
+                    experience.id,
+                    "startDate",
+                    e.target.value
+                  )
+                }
                 className={inputClass}
               />
             </div>
@@ -126,6 +172,14 @@ export default function ExperienceSection() {
                 <input
                   id={`endDate-${experience.id}`}
                   type="month"
+                  value={experience.endDate}
+                  onChange={(e) =>
+                    updateExperience(
+                      experience.id,
+                      "endDate",
+                      e.target.value
+                    )
+                  }
                   className={inputClass}
                 />
               </div>
@@ -136,9 +190,22 @@ export default function ExperienceSection() {
             <input
               type="checkbox"
               checked={experience.current}
-              onChange={(event) =>
-                toggleCurrent(experience.id, event.target.checked)
-              }
+
+              onChange={(e) => {
+                const checked = e.target.checked;
+
+                onChange(
+                    value.map((item) =>
+                    item.id === experience.id
+                        ? {
+                            ...item,
+                            current: checked,
+                            endDate: checked ? "" : item.endDate,
+                        }
+                        : item
+                    )
+                );
+                }}
             />
             Lucrez aici în prezent
           </label>
@@ -153,7 +220,15 @@ export default function ExperienceSection() {
             <textarea
               id={`description-${experience.id}`}
               rows={4}
-              placeholder="Descrie principalele responsabilități și realizări..."
+              value={experience.description}
+              onChange={(e) =>
+                updateExperience(
+                  experience.id,
+                  "description",
+                  e.target.value
+                )
+              }
+              placeholder="Descrie responsabilitățile și realizările..."
               className={inputClass}
             />
           </div>
