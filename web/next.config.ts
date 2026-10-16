@@ -1,9 +1,21 @@
+
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+
+
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "laughing-couscous-qjgwx44rp473xq7j-3000.app.github.dev",
+        "localhost:3000",
+      ],
+    },
+  },
+
+
   turbopack: {
     rules: {
       "*.css": {

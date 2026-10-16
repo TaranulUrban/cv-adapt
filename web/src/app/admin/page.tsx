@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import RoleButton from "./role-button";
+
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -76,6 +78,7 @@ export default async function AdminPage() {
                     <th className="px-3 py-3">ID utilizator</th>
                     <th className="px-3 py-3">Rol</th>
                     <th className="px-3 py-3">Data creării</th>
+                    <th className="px-3 py-3">Acțiuni</th>
                   </tr>
                 </thead>
 
@@ -98,6 +101,12 @@ export default async function AdminPage() {
                           userProfile.created_at
                         ).toLocaleDateString("ro-RO")}
                       </td>
+                    <td className="px-3 py-3">
+                    <RoleButton
+                        userId={userProfile.id}
+                        currentRole={userProfile.role}
+                    />
+                    </td>
                     </tr>
                   ))}
                 </tbody>
