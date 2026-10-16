@@ -25,6 +25,15 @@ export default async function AdminPage() {
     redirect("/dashboard");
   }
 
+  const { data: users, error: usersError } = await supabase
+    .from("profiles")
+    .select("id, role, created_at")
+    .order("created_at", { ascending: false });
+
+  if (usersError) {
+    throw new Error("Nu am putut încărca lista utilizatorilor.");
+  }
+
   return (
     <main className="min-h-screen bg-slate-50 p-6 text-slate-900">
       <div className="mx-auto max-w-5xl">
@@ -33,7 +42,10 @@ export default async function AdminPage() {
             CV Adapt — Admin
           </h1>
 
-          <Link href="/dashboard" className="font-medium text-blue-700 hover:underline">
+          <Link
+            href="/dashboard"
+            className="font-medium text-blue-700 hover:underline"
+          >
             Înapoi la Dashboard
           </Link>
         </header>
@@ -54,9 +66,43 @@ export default async function AdminPage() {
             </h3>
 
             <p className="mt-3 text-slate-600">
-              În etapa următoare vom adăuga lista utilizatorilor
-              și posibilitatea de a atribui rolurile Client și Tester.
+              Utilizatori înregistrați: {users?.length ?? 0}
             </p>
+
+            <div className="mt-6 overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-slate-200">
+                    <th className="px-3 py-3">ID utilizator</th>
+                    <th className="px-3 py-3">Rol</th>
+                    <th className="px-3 py-3">Data creării</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {users?.map((userProfile) => (
+                    <tr
+                      key={userProfile.id}
+                      className="border-b border-slate-100"
+                    >
+                      <td className="px-3 py-3 font-mono text-xs">
+                        {userProfile.id.slice(0, 8)}...
+                      </td>
+
+                      <td className="px-3 py-3 font-medium">
+                        {userProfile.role}
+                      </td>
+
+                      <td className="px-3 py-3">
+                        {new Date(
+                          userProfile.created_at
+                        ).toLocaleDateString("ro-RO")}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
       </div>
