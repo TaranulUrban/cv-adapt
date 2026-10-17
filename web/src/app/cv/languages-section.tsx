@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 
 export type Language = {
   id: number;
@@ -28,14 +27,14 @@ export default function LanguagesSection({
   value,
   onChange,
 }: LanguagesSectionProps) {
-  const [nextId, setNextId] = useState(1);
+  const nextId = Math.max(0, ...value.map((item) => item.id)) + 1;
 
   function addLanguage() {
     onChange([
       ...value,
       { id: nextId, name: "", level: "B1" },
     ]);
-    setNextId((previous) => previous + 1);
+    
   }
 
   function updateLanguage(

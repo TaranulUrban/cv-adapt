@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 
 export type Experience = {
   id: number;
@@ -22,7 +21,7 @@ export default function ExperienceSection({
   value,
   onChange,
 }: ExperienceSectionProps) {
-  const [nextId, setNextId] = useState(1);
+  const nextId = Math.max(0, ...value.map((item) => item.id)) + 1;
 
   function addExperience() {
     onChange([
@@ -38,7 +37,7 @@ export default function ExperienceSection({
       },
     ]);
 
-    setNextId((previous) => previous + 1);
+    
   }
 
   function removeExperience(id: number) {

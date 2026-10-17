@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 
 export type Education = {
   id: number;
@@ -21,7 +20,7 @@ export default function EducationSection({
   value,
   onChange,
 }: EducationSectionProps) {
-  const [nextId, setNextId] = useState(1);
+  const nextId = Math.max(0, ...value.map((item) => item.id)) + 1;
 
   function addEducation() {
     onChange([
@@ -36,7 +35,7 @@ export default function EducationSection({
       },
     ]);
 
-    setNextId((previous) => previous + 1);
+    
   }
 
   function removeEducation(id: number) {
