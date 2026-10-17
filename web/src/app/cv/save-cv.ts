@@ -58,3 +58,54 @@ export async function saveCV(data: CVData) {
 
   return savedCV.id;
 }
+
+
+export async function updateCV(
+  cvId: string,
+  data: CVData
+) {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    throw new Error(
+      "Trebuie să fii autentificat pentru a modifica CV-ul."
+    );
+  }
+
+  const { data: updatedCV, error } = await supabase
+    .from("cvs")
+    .update({
+      title: data.title,
+      personal_info: data.personal_info,
+      experiences: data.experiences,
+      education: data.education,
+      skills: data.skills,
+      languages: data.languages,
+      job_info: data.job_info,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", cvId)
+    .eq("user_id", user.id)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(
+      `Nu am putut actualiza CV-ul: ${error.message}`
+    );
+  }
+
+  if (!updatedCV) {
+    throw new Error(
+      "CV-ul nu a fost găsit sau nu ai permisiunea să îl modifici."
+    );
+  }
+
+  return updatedCV.id;
+}
+

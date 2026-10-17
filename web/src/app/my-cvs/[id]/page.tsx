@@ -93,6 +93,7 @@ export default async function CVDetailsPage({
       </Link>
 
       <h1 className="mt-6 text-3xl font-bold">{cv.title}</h1>
+      <Link href={`/my-cvs/${cv.id}/edit`} className="mt-5 inline-block rounded-lg bg-blue-600 px-5 py-3 font-medium text-white hover:bg-blue-700"> Editează CV </Link>
 
       <section className="mt-8 rounded-xl border border-gray-700 p-6">
         <h2 className="text-xl font-semibold">Date personale</h2>

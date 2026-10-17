@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-
 import ExperienceSection, {
   type Experience,
 } from "./experience-section";
@@ -19,7 +18,7 @@ import LanguagesSection, {
 
 import JobSection, { type JobData } from "./job-section";
 
-import { saveCV } from "./save-cv";
+import { saveCV, updateCV } from "./save-cv";
 
 import type { SavedCV } from "./save-cv";
 
@@ -29,30 +28,46 @@ type CVFormProps = {
 };
 
 export default function CVForm({ initialData }: CVFormProps) {
+  
   const [personalInfo, setPersonalInfo] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    city: "",
+    firstName: initialData?.personal_info.firstName ?? "",
+    lastName: initialData?.personal_info.lastName ?? "",
+    email: initialData?.personal_info.email ?? "",
+    phone: initialData?.personal_info.phone ?? "",
+    city: initialData?.personal_info.city ?? "",
   });
 
-  const [experiences, setExperiences] = useState<Experience[]>([]);
-  const [educations, setEducations] = useState<Education[]>([]);
-  const [skills, setSkills] = useState<string[]>([]);
-  const [languages, setLanguages] = useState<Language[]>([]);
-  const [job, setJob] = useState<JobData>({
-    jobUrl: "",
-    jobDescription: "",
-    cvLanguage: "ro",
-    });
+  const [experiences, setExperiences] = useState<Experience[]>(
+    (initialData?.experiences as Experience[] | undefined) ?? []
+  );
+
+  const [educations, setEducations] = useState<Education[]>(
+    (initialData?.education as Education[] | undefined) ?? []
+  );
+
+  const [skills, setSkills] = useState<string[]>(
+    initialData?.skills ?? []
+  );
+
+  const [languages, setLanguages] = useState<Language[]>(
+    initialData?.languages ?? []
+  );
+
+  const [job, setJob] = useState<JobData>(
+    initialData?.job_info ?? {
+      jobUrl: "",
+      jobDescription: "",
+      cvLanguage: "ro",
+    }
+  );
+
 
 const [isSaving, setIsSaving] = useState(false);
 const [saveMessage, setSaveMessage] = useState("");
 const [savedCvId, setSavedCvId] = useState<string | null>(null);
 
 async function handleSave() {
-  if (isSaving || savedCvId) return;
+  if (isSaving || (!initialData && savedCvId)) return;
 
   if (!personalInfo.firstName.trim() || !personalInfo.lastName.trim()) {
     setSaveMessage("Completează prenumele și numele înainte de salvare.");
@@ -63,18 +78,37 @@ async function handleSave() {
   setSaveMessage("");
 
   try {
-    const id = await saveCV({
-      title: `CV ${personalInfo.firstName} ${personalInfo.lastName}`,
-      personal_info: personalInfo,
-      experiences: experiences.map((item) => ({ ...item })),
-      education: educations.map((item) => ({ ...item })),
-      skills,
-      languages: languages.map((item) => ({ ...item })),
-      job_info: job,
-    });
+      const cvData = {
+        title: `CV ${personalInfo.firstName.trim()} ${personalInfo.lastName.trim()}`,
+        personal_info: {
+          ...personalInfo,
+          firstName: personalInfo.firstName.trim(),
+          lastName: personalInfo.lastName.trim(),
+        },
+        experiences: experiences.map((item) => ({
+          ...item,
+          endDate: item.current ? "" : item.endDate,
+        })),
+        education: educations.map((item) => ({
+          ...item,
+          endDate: item.ongoing ? "" : item.endDate,
+        })),
+        skills,
+        languages: languages.map((item) => ({ ...item })),
+        job_info: job,
+      };
 
-    setSavedCvId(id);
-    setSaveMessage("CV-ul a fost salvat cu succes în Supabase!");
+      const id = initialData
+        ? await updateCV(initialData.id, cvData)
+        : await saveCV(cvData);
+
+      setSavedCvId(id);
+      setSaveMessage(
+        initialData
+          ? "CV-ul a fost actualizat cu succes!"
+          : "CV-ul a fost salvat cu succes în Supabase!"
+      );
+
   } catch (error) {
     setSaveMessage(
       error instanceof Error
@@ -218,14 +252,17 @@ async function handleSave() {
         <button
           type="button"
           onClick={handleSave}
-          disabled={isSaving || savedCvId !== null}
+          disabled={isSaving || (!initialData && savedCvId !== null)}
           className="rounded-lg bg-blue-600 px-6 py-4 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSaving
             ? "Se salvează..."
-            : savedCvId
-              ? "CV salvat"
-              : "Salvează CV"}
+            : initialData
+              ? "Salvează modificările"
+              : savedCvId
+                ? "CV salvat"
+                : "Salvează CV"
+          }
         </button>
 
         {saveMessage && (
