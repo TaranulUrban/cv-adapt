@@ -133,9 +133,20 @@ export function assertGeneratedCVIsValid(
   },
   generatedCV: GeneratedCV
 ): void {
-  if (!verifyGeneratedCV(originalCV, generatedCV)) {
+  const checks = {
+    experiences: verifyGeneratedExperiences(originalCV.experiences, generatedCV),
+    education: verifyGeneratedEducation(originalCV.education, generatedCV),
+    skills: verifyGeneratedSkills(originalCV.skills, generatedCV),
+    languages: verifyGeneratedLanguages(originalCV.languages, generatedCV),
+  };
+
+  const failedChecks = Object.entries(checks)
+    .filter(([, passed]) => !passed)
+    .map(([name]) => name);
+
+  if (failedChecks.length > 0) {
     throw new Error(
-      "CV-ul generat conține modificări nepermise ale informațiilor originale."
+      `CV validation failed: ${failedChecks.join(", ")}`
     );
   }
 }

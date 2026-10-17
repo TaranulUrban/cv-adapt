@@ -5,6 +5,7 @@ import { generateAdaptedCV } from "@/lib/ai/generate-cv";
 import { assertGeneratedCVIsValid } from "@/lib/ai/verify-generated-cv";
 import { originalCVSchema } from "@/lib/ai/original-cv-validation";
 import { calculateAIUsage } from "@/lib/ai/usage-cost";
+import { protectGeneratedCV } from "@/lib/ai/protect-generated-cv";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -266,7 +267,9 @@ try {
     jobInfo.cvLanguage
   );
 
-  assertGeneratedCVIsValid(cvForAI, result.content);
+  const protectedCV = protectGeneratedCV(cvForAI, result.content);
+
+  assertGeneratedCVIsValid(cvForAI, protectedCV);
 
   const usage = calculateAIUsage(result.usage);
 
