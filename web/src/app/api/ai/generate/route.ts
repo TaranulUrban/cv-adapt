@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { generateAdaptedCV } from "@/lib/ai/generate-cv";
+import { assertGeneratedCVIsValid } from "@/lib/ai/verify-generated-cv";
+import { originalCVSchema } from "@/lib/ai/original-cv-validation";
+import { calculateAIUsage } from "@/lib/ai/usage-cost";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -105,13 +109,23 @@ export async function POST(request: Request) {
     // Rezervarea va fi activată după implementarea
   // completării și tratării eșecurilor.
   const verifiedCvId = cv.id;
+  const verifiedUserId = user.id;
 
-  const cvForAI = {
-    experiences: cv.experiences,
-    education: cv.education,
-    skills: cv.skills,
-    languages: cv.languages,
-  };
+  const validationResult = originalCVSchema.safeParse({
+  experiences: cv.experiences,
+  education: cv.education,
+  skills: cv.skills,
+  languages: cv.languages,
+});
+
+if (!validationResult.success) {
+  return NextResponse.json(
+    { error: "CV-ul conține date invalide. Verifică informațiile introduse." },
+    { status: 400 }
+  );
+}
+
+const cvForAI = validationResult.data;
 
   const cvForAIJson = JSON.stringify(cvForAI);
 
@@ -125,17 +139,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (
-    !Array.isArray(cv.experiences) ||
-    !Array.isArray(cv.education) ||
-    !Array.isArray(cv.skills) ||
-    !Array.isArray(cv.languages)
-  ) {
-    return NextResponse.json(
-      { error: "Datele CV-ului au un format invalid." },
-      { status: 400 }
-    );
-  }
+  
 
 
   
@@ -145,9 +149,14 @@ export async function POST(request: Request) {
       { p_cv_id: verifiedCvId }
     );
 
-    if (error) {
-      throw new Error(error.message);
-    }
+   if (error) {
+  if (error.message.includes("Daily AI generation limit reached")) {
+    throw new Error("AI_DAILY_LIMIT_REACHED");
+  }
+
+  console.error("Supabase AI reservation failed:", error.code);
+  throw new Error("AI_RESERVATION_FAILED");
+}
 
     return data as string;
   }
@@ -214,15 +223,78 @@ async function completeGeneration(
   return data as string;
 }
 
-  // Temporar nu apelăm reserveGeneration().
-    void reserveGeneration;
-    void failGeneration;
-    void completeGeneration;  
+  async function markGenerationFailed(requestId: string): Promise<void> {
+  try {
+    const marked = await failGeneration(verifiedUserId, requestId);
 
+    if (!marked) {
+      console.error("Generarea AI nu a putut fi marcată ca eșuată.");
+    }
+  } catch (error) {
+    console.error("Eroare la actualizarea generării AI:", error);
+  }
+}
+
+
+let requestId: string;
+
+try {
+  requestId = await reserveGeneration();
+} catch (error) {
+  if (
+    error instanceof Error &&
+    error.message === "AI_DAILY_LIMIT_REACHED"
+  ) {
+    return NextResponse.json(
+      { error: "Ai atins limita de 5 generări AI pentru astăzi." },
+      { status: 429 }
+    );
+  }
+
+  console.error("Eroare tehnică la rezervarea AI:", error);
+
+  return NextResponse.json(
+    { error: "Serviciul de generare este temporar indisponibil." },
+    { status: 500 }
+  );
+}
+
+try {
+  const result = await generateAdaptedCV(
+    cvForAI,
+    jobDescription,
+    jobInfo.cvLanguage
+  );
+
+  assertGeneratedCVIsValid(cvForAI, result.content);
+
+  const usage = calculateAIUsage(result.usage);
+
+  const generatedCvId = await completeGeneration(
+    verifiedUserId,
+    requestId,
+    result.content,
+    jobDescription,
+    jobInfo.cvLanguage,
+    {
+      model: result.model,
+      ...usage,
+    }
+  );
 
   return NextResponse.json({
     success: true,
-    message: "Autentificarea și proprietatea CV-ului au fost verificate.",
-    cvId: cv.id,
+    generatedCvId,
+    usage,
   });
+} catch (error) {
+  console.error("Generarea CV-ului a eșuat:", error);
+
+  await markGenerationFailed(requestId);
+
+  return NextResponse.json(
+    { error: "Generarea CV-ului a eșuat. Te rugăm să încerci mai târziu." },
+    { status: 500 }
+  );
+}
 }
