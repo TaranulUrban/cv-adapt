@@ -37,8 +37,33 @@ export async function POST() {
       store: false,
     });
 
+    const inputTokens = response.usage?.input_tokens ?? 0;
+    const outputTokens = response.usage?.output_tokens ?? 0;
+
+    const reasoningTokens =
+    response.usage?.output_tokens_details?.reasoning_tokens ?? 0;
+
+    const estimatedCostUsd =
+    (inputTokens / 1_000_000) * 0.25 +
+    (outputTokens / 1_000_000) * 2.0;
+
+    console.log("AI usage:", {
+    model: response.model,
+    inputTokens,
+    outputTokens,
+    reasoningTokens,
+    estimatedCostUsd,
+    });
+
     return NextResponse.json({
-      message: response.output_text,
+    message: response.output_text,
+    usage: {
+        model: response.model,
+        inputTokens,
+        outputTokens,
+        reasoningTokens,
+        estimatedCostUsd,
+    },
     });
   } catch (error) {
     const apiError = error as {
