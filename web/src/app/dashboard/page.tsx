@@ -1,9 +1,14 @@
 
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "./logout-button";
 
+export const instant = false;
+
 export default async function DashboardPage() {
+  await connection();
+
   const supabase = await createClient();
 
   const {
