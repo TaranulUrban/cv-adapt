@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { connection } from "next/server";
 import { notFound, redirect } from "next/navigation";
@@ -32,14 +33,15 @@ export default async function GeneratedCVPage({
     redirect("/login");
   }
 
-  const { data: generatedCV, error: generatedError } = await supabase
-    .from("generated_cvs")
-    .select(
-      "id, original_cv_id, generated_content, cv_language, ai_model, created_at"
-    )
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const { data: generatedCV, error: generatedError } =
+    await supabase
+      .from("generated_cvs")
+      .select(
+        "id, original_cv_id, generated_content, cv_language, ai_model, created_at"
+      )
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .maybeSingle();
 
   if (generatedError) {
     throw new Error("Nu am putut încărca CV-ul generat.");
@@ -49,22 +51,26 @@ export default async function GeneratedCVPage({
     notFound();
   }
 
-  const validationResult = generatedCVValidationSchema.safeParse(
-    generatedCV.generated_content
-  );
+  const validationResult =
+    generatedCVValidationSchema.safeParse(
+      generatedCV.generated_content
+    );
 
   if (!validationResult.success) {
-    throw new Error("CV-ul generat conține date invalide.");
+    throw new Error(
+      "CV-ul generat conține date invalide."
+    );
   }
 
   const cvContent = validationResult.data;
 
-  const { data: originalCV, error: originalError } = await supabase
-    .from("cvs")
-    .select("id, title, personal_info")
-    .eq("id", generatedCV.original_cv_id)
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const { data: originalCV, error: originalError } =
+    await supabase
+      .from("cvs")
+      .select("id, title, personal_info")
+      .eq("id", generatedCV.original_cv_id)
+      .eq("user_id", user.id)
+      .maybeSingle();
 
   if (originalError) {
     throw new Error("Nu am putut încărca CV-ul original.");
@@ -74,8 +80,14 @@ export default async function GeneratedCVPage({
     notFound();
   }
 
-  const personal = (originalCV.personal_info ?? {}) as PersonalInfo;
-  const fullName = [personal.firstName, personal.lastName]
+  const personal = (
+    originalCV.personal_info ?? {}
+  ) as PersonalInfo;
+
+  const fullName = [
+    personal.firstName,
+    personal.lastName,
+  ]
     .filter(Boolean)
     .join(" ");
 
@@ -85,6 +97,7 @@ export default async function GeneratedCVPage({
     ? {
         back: "Back to generated CVs",
         title: "AI-adapted CV",
+        download: "Download PDF",
         review: "Review before use",
         warning:
           "Check all AI-generated descriptions and the professional summary for accuracy before using this CV.",
@@ -103,6 +116,7 @@ export default async function GeneratedCVPage({
     : {
         back: "Înapoi la CV-urile generate",
         title: "CV adaptat cu AI",
+        download: "Descarcă PDF",
         review: "Verifică înainte de utilizare",
         warning:
           "Verifică toate descrierile și rezumatul profesional generate de AI înainte să folosești acest CV.",
@@ -120,13 +134,17 @@ export default async function GeneratedCVPage({
       };
 
   const generatedAt = new Date(generatedCV.created_at);
+
   const dateText = Number.isNaN(generatedAt.getTime())
     ? "—"
-    : generatedAt.toLocaleString(en ? "en-GB" : "ro-RO", {
-        dateStyle: "medium",
-        timeStyle: "short",
-        timeZone: "Europe/Bucharest",
-      });
+    : generatedAt.toLocaleString(
+        en ? "en-GB" : "ro-RO",
+        {
+          dateStyle: "medium",
+          timeStyle: "short",
+          timeZone: "Europe/Bucharest",
+        }
+      );
 
   return (
     <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
@@ -138,7 +156,18 @@ export default async function GeneratedCVPage({
           ← {labels.back}
         </Link>
 
-        <h1 className="mt-6 text-3xl font-bold">{labels.title}</h1>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+          <h1 className="text-3xl font-bold">
+            {labels.title}
+          </h1>
+
+          <a
+            href={`/api/generated-cvs/${generatedCV.id}/pdf`}
+            className="inline-flex items-center rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700"
+          >
+            ↓ {labels.download}
+          </a>
+        </div>
 
         <section className="mt-8 rounded-xl border border-amber-700 bg-amber-950/20 p-6">
           <h2 className="font-semibold text-amber-300">
@@ -150,9 +179,16 @@ export default async function GeneratedCVPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">{labels.contact}</h2>
+          <h2 className="text-xl font-semibold">
+            {labels.contact}
+          </h2>
+
           <div className="mt-4 space-y-2">
-            {fullName && <p className="text-lg font-medium">{fullName}</p>}
+            {fullName && (
+              <p className="text-lg font-medium">
+                {fullName}
+              </p>
+            )}
             {personal.email && <p>{personal.email}</p>}
             {personal.phone && <p>{personal.phone}</p>}
             {personal.city && <p>{personal.city}</p>}
@@ -160,24 +196,36 @@ export default async function GeneratedCVPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">{labels.summary}</h2>
+          <h2 className="text-xl font-semibold">
+            {labels.summary}
+          </h2>
           <p className="mt-4 whitespace-pre-wrap leading-7">
-            {cvContent.professional_summary || labels.empty}
+            {cvContent.professional_summary ||
+              labels.empty}
           </p>
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">{labels.experience}</h2>
+          <h2 className="text-xl font-semibold">
+            {labels.experience}
+          </h2>
+
           {cvContent.experiences.length === 0 ? (
-            <p className="mt-4 text-gray-400">{labels.empty}</p>
+            <p className="mt-4 text-gray-400">
+              {labels.empty}
+            </p>
           ) : (
             cvContent.experiences.map((item, index) => (
               <article key={index} className="mt-6">
-                <h3 className="text-lg font-semibold">{item.jobTitle}</h3>
+                <h3 className="text-lg font-semibold">
+                  {item.jobTitle}
+                </h3>
                 <p className="mt-1">{item.company}</p>
                 <p className="mt-1 text-sm text-gray-400">
                   {item.startDate} –{" "}
-                  {item.current ? labels.present : item.endDate}
+                  {item.current
+                    ? labels.present
+                    : item.endDate}
                 </p>
                 <p className="mt-3 whitespace-pre-wrap leading-7">
                   {item.description}
@@ -188,17 +236,26 @@ export default async function GeneratedCVPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">{labels.education}</h2>
+          <h2 className="text-xl font-semibold">
+            {labels.education}
+          </h2>
+
           {cvContent.education.length === 0 ? (
-            <p className="mt-4 text-gray-400">{labels.empty}</p>
+            <p className="mt-4 text-gray-400">
+              {labels.empty}
+            </p>
           ) : (
             cvContent.education.map((item, index) => (
               <article key={index} className="mt-6">
-                <h3 className="font-semibold">{item.institution}</h3>
+                <h3 className="font-semibold">
+                  {item.institution}
+                </h3>
                 <p className="mt-1">{item.degree}</p>
                 <p className="mt-1 text-sm text-gray-400">
                   {item.startDate} –{" "}
-                  {item.ongoing ? labels.present : item.endDate}
+                  {item.ongoing
+                    ? labels.present
+                    : item.endDate}
                 </p>
               </article>
             ))
@@ -206,10 +263,15 @@ export default async function GeneratedCVPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">{labels.skills}</h2>
+          <h2 className="text-xl font-semibold">
+            {labels.skills}
+          </h2>
+
           <div className="mt-4 flex flex-wrap gap-2">
             {cvContent.skills.length === 0 ? (
-              <p className="text-gray-400">{labels.empty}</p>
+              <p className="text-gray-400">
+                {labels.empty}
+              </p>
             ) : (
               cvContent.skills.map((skill, index) => (
                 <span
@@ -224,12 +286,20 @@ export default async function GeneratedCVPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">{labels.languages}</h2>
+          <h2 className="text-xl font-semibold">
+            {labels.languages}
+          </h2>
+
           {cvContent.languages.length === 0 ? (
-            <p className="mt-4 text-gray-400">{labels.empty}</p>
+            <p className="mt-4 text-gray-400">
+              {labels.empty}
+            </p>
           ) : (
             cvContent.languages.map((language, index) => (
-              <p key={`${language.name}-${index}`} className="mt-3">
+              <p
+                key={`${language.name}-${index}`}
+                className="mt-3"
+              >
                 {language.name} — {language.level}
               </p>
             ))
@@ -237,7 +307,9 @@ export default async function GeneratedCVPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">{labels.details}</h2>
+          <h2 className="text-xl font-semibold">
+            {labels.details}
+          </h2>
           <p className="mt-4 text-sm text-gray-400">
             Model: {generatedCV.ai_model}
           </p>
