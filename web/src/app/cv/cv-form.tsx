@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+
 import ExperienceSection, {
   type Experience,
 } from "./experience-section";
@@ -19,16 +20,23 @@ import LanguagesSection, {
 import JobSection, { type JobData } from "./job-section";
 
 import { saveCV, updateCV } from "./save-cv";
-
 import type { SavedCV } from "./save-cv";
-
 
 type CVFormProps = {
   initialData?: SavedCV;
 };
 
+// Reatribuim ID-uri interne unice la incarcarea formularului.
+// Fiecare inregistrare primeste propriul ID, chiar daca
+// datele salvate anterior contin ID-uri duplicate.
+function normalizeIds<T extends { id: number }>(items: T[]): T[] {
+  return items.map((item, index) => ({
+    ...item,
+    id: index + 1,
+  }));
+}
+
 export default function CVForm({ initialData }: CVFormProps) {
-  
   const [personalInfo, setPersonalInfo] = useState({
     firstName: initialData?.personal_info.firstName ?? "",
     lastName: initialData?.personal_info.lastName ?? "",
@@ -37,20 +45,24 @@ export default function CVForm({ initialData }: CVFormProps) {
     city: initialData?.personal_info.city ?? "",
   });
 
-  const [experiences, setExperiences] = useState<Experience[]>(
-    (initialData?.experiences as Experience[] | undefined) ?? []
+  const [experiences, setExperiences] = useState<Experience[]>(() =>
+    normalizeIds(
+      (initialData?.experiences as Experience[] | undefined) ?? []
+    )
   );
 
-  const [educations, setEducations] = useState<Education[]>(
-    (initialData?.education as Education[] | undefined) ?? []
+  const [educations, setEducations] = useState<Education[]>(() =>
+    normalizeIds(
+      (initialData?.education as Education[] | undefined) ?? []
+    )
   );
 
   const [skills, setSkills] = useState<string[]>(
     initialData?.skills ?? []
   );
 
-  const [languages, setLanguages] = useState<Language[]>(
-    initialData?.languages ?? []
+  const [languages, setLanguages] = useState<Language[]>(() =>
+    normalizeIds(initialData?.languages ?? [])
   );
 
   const [job, setJob] = useState<JobData>(
@@ -61,23 +73,27 @@ export default function CVForm({ initialData }: CVFormProps) {
     }
   );
 
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [savedCvId, setSavedCvId] = useState<string | null>(null);
 
-const [isSaving, setIsSaving] = useState(false);
-const [saveMessage, setSaveMessage] = useState("");
-const [savedCvId, setSavedCvId] = useState<string | null>(null);
+  async function handleSave() {
+    if (isSaving || (!initialData && savedCvId)) return;
 
-async function handleSave() {
-  if (isSaving || (!initialData && savedCvId)) return;
+    if (
+      !personalInfo.firstName.trim() ||
+      !personalInfo.lastName.trim()
+    ) {
+      setSaveMessage(
+        "Completează prenumele și numele înainte de salvare."
+      );
+      return;
+    }
 
-  if (!personalInfo.firstName.trim() || !personalInfo.lastName.trim()) {
-    setSaveMessage("Completează prenumele și numele înainte de salvare.");
-    return;
-  }
+    setIsSaving(true);
+    setSaveMessage("");
 
-  setIsSaving(true);
-  setSaveMessage("");
-
-  try {
+    try {
       const cvData = {
         title: `CV ${personalInfo.firstName.trim()} ${personalInfo.lastName.trim()}`,
         personal_info: {
@@ -94,7 +110,9 @@ async function handleSave() {
           endDate: item.ongoing ? "" : item.endDate,
         })),
         skills,
-        languages: languages.map((item) => ({ ...item })),
+        languages: languages.map((item) => ({
+          ...item,
+        })),
         job_info: job,
       };
 
@@ -103,22 +121,22 @@ async function handleSave() {
         : await saveCV(cvData);
 
       setSavedCvId(id);
+
       setSaveMessage(
         initialData
           ? "CV-ul a fost actualizat cu succes!"
           : "CV-ul a fost salvat cu succes în Supabase!"
       );
-
-  } catch (error) {
-    setSaveMessage(
-      error instanceof Error
-        ? error.message
-        : "A apărut o eroare la salvare."
-    );
-  } finally {
-    setIsSaving(false);
+    } catch (error) {
+      setSaveMessage(
+        error instanceof Error
+          ? error.message
+          : "A apărut o eroare la salvare."
+      );
+    } finally {
+      setIsSaving(false);
+    }
   }
-}
 
   function updatePersonalInfo(
     field: keyof typeof personalInfo,
@@ -142,7 +160,10 @@ async function handleSave() {
 
         <div className="mt-6 grid gap-5 sm:grid-cols-2">
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium">
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium"
+            >
               Prenume
             </label>
             <input
@@ -157,7 +178,10 @@ async function handleSave() {
           </div>
 
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium">
+            <label
+              htmlFor="lastName"
+              className="block text-sm font-medium"
+            >
               Nume
             </label>
             <input
@@ -172,7 +196,10 @@ async function handleSave() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium"
+            >
               Email
             </label>
             <input
@@ -187,7 +214,10 @@ async function handleSave() {
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium"
+            >
               Telefon
             </label>
             <input
@@ -202,7 +232,10 @@ async function handleSave() {
           </div>
 
           <div className="sm:col-span-2">
-            <label htmlFor="city" className="block text-sm font-medium">
+            <label
+              htmlFor="city"
+              className="block text-sm font-medium"
+            >
               Localitate
             </label>
             <input
@@ -218,30 +251,25 @@ async function handleSave() {
         </div>
       </section>
 
-    <ExperienceSection
+      <ExperienceSection
         value={experiences}
         onChange={setExperiences}
-    />
+      />
 
-    <EducationSection
+      <EducationSection
         value={educations}
         onChange={setEducations}
-    />
+      />
 
-     <SkillsSection
+      <SkillsSection
         value={skills}
         onChange={setSkills}
-    />
+      />
 
-
-
-     <LanguagesSection
+      <LanguagesSection
         value={languages}
         onChange={setLanguages}
-    />
-
-
-
+      />
 
       <JobSection
         value={job}
@@ -252,7 +280,10 @@ async function handleSave() {
         <button
           type="button"
           onClick={handleSave}
-          disabled={isSaving || (!initialData && savedCvId !== null)}
+          disabled={
+            isSaving ||
+            (!initialData && savedCvId !== null)
+          }
           className="rounded-lg bg-blue-600 px-6 py-4 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSaving
@@ -261,8 +292,7 @@ async function handleSave() {
               ? "Salvează modificările"
               : savedCvId
                 ? "CV salvat"
-                : "Salvează CV"
-          }
+                : "Salvează CV"}
         </button>
 
         {saveMessage && (
@@ -278,4 +308,3 @@ async function handleSave() {
     </>
   );
 }
-
