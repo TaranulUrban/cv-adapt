@@ -1,6 +1,7 @@
 
 import Link from "next/link";
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { notFound, redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
@@ -44,6 +45,8 @@ async function GeneratedCVContent({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await connection();
+
   const { id } = await params;
   const supabase = await createClient();
 

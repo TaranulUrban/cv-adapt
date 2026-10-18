@@ -1,6 +1,7 @@
 
 import Link from "next/link";
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
@@ -27,6 +28,8 @@ export default function GeneratedCVsListPage() {
 }
 
 async function GeneratedCVsContent() {
+  await connection();
+
   const supabase = await createClient();
 
   const {
