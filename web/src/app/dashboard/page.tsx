@@ -1,14 +1,33 @@
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "./logout-button";
 
-export default async function DashboardPage() {
-  await connection();
+export default function DashboardPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-slate-50 p-6 text-slate-900">
+          <div className="mx-auto max-w-5xl">
+            <h1 className="text-2xl font-bold text-blue-700">
+              CV Adapt
+            </h1>
+            <p className="mt-6 text-slate-600">
+              Se încarcă Dashboard-ul...
+            </p>
+          </div>
+        </main>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
+  );
+}
 
+async function DashboardContent() {
   const supabase = await createClient();
 
   const {
@@ -27,7 +46,9 @@ export default async function DashboardPage() {
     .single();
 
   if (profileError || !profile) {
-    throw new Error("Nu am putut încărca profilul utilizatorului.");
+    throw new Error(
+      "Nu am putut încărca profilul utilizatorului."
+    );
   }
 
   const navigation = [
@@ -79,7 +100,9 @@ export default async function DashboardPage() {
 
           <p className="mt-2 text-slate-600">
             Rolul tău:{" "}
-            <span className="font-semibold">{profile.role}</span>
+            <span className="font-semibold">
+              {profile.role}
+            </span>
           </p>
 
           {profile.role === "admin" && (
@@ -121,10 +144,10 @@ export default async function DashboardPage() {
             </h2>
 
             <p className="mt-2 text-sm leading-6 text-blue-900">
-              Creezi un CV original, adaugi descrierea jobului
-              dorit, apoi generezi o versiune adaptată.
-              Verifici informațiile înainte să folosești
-              rezultatul.
+              Creezi un CV original, adaugi descrierea
+              jobului dorit, apoi generezi o versiune
+              adaptată. Verifici informațiile înainte
+              să folosești rezultatul.
             </p>
           </div>
         </section>

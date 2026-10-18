@@ -1,13 +1,32 @@
 
 import Link from "next/link";
-import { connection } from "next/server";
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 
-export default async function GeneratedCVsListPage() {
-  await connection();
+export default function GeneratedCVsListPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
+          <div className="mx-auto max-w-4xl">
+            <h1 className="text-3xl font-bold">
+              CV-uri generate cu AI
+            </h1>
+            <p className="mt-4 text-gray-400">
+              Se încarcă CV-urile generate...
+            </p>
+          </div>
+        </main>
+      }
+    >
+      <GeneratedCVsContent />
+    </Suspense>
+  );
+}
 
+async function GeneratedCVsContent() {
   const supabase = await createClient();
 
   const {

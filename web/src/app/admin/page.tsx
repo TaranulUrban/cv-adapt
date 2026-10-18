@@ -1,11 +1,33 @@
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
+
 import { createClient } from "@/lib/supabase/server";
 import RoleButton from "./role-button";
 
+export default function AdminPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-slate-50 p-6 text-slate-900">
+          <div className="mx-auto max-w-5xl">
+            <h1 className="text-2xl font-bold text-blue-700">
+              CV Adapt — Admin
+            </h1>
+            <p className="mt-6 text-slate-600">
+              Se încarcă panoul de administrare...
+            </p>
+          </div>
+        </main>
+      }
+    >
+      <AdminContent />
+    </Suspense>
+  );
+}
 
-export default async function AdminPage() {
+async function AdminContent() {
   const supabase = await createClient();
 
   const {
@@ -101,12 +123,13 @@ export default async function AdminPage() {
                           userProfile.created_at
                         ).toLocaleDateString("ro-RO")}
                       </td>
-                    <td className="px-3 py-3">
-                    <RoleButton
-                        userId={userProfile.id}
-                        currentRole={userProfile.role}
-                    />
-                    </td>
+
+                      <td className="px-3 py-3">
+                        <RoleButton
+                          userId={userProfile.id}
+                          currentRole={userProfile.role}
+                        />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
