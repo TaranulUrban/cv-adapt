@@ -107,8 +107,6 @@ export async function POST(request: Request) {
     );
   }
 
-    // Rezervarea va fi activată după implementarea
-  // completării și tratării eșecurilor.
   const verifiedCvId = cv.id;
   const verifiedUserId = user.id;
 
@@ -151,6 +149,10 @@ const cvForAI = validationResult.data;
     );
 
    if (error) {
+  if (error.message.includes("Global daily AI generation limit reached")) {
+    throw new Error("AI_GLOBAL_DAILY_LIMIT_REACHED");
+  }
+
   if (error.message.includes("Daily AI generation limit reached")) {
     throw new Error("AI_DAILY_LIMIT_REACHED");
   }
@@ -248,6 +250,16 @@ try {
   ) {
     return NextResponse.json(
       { error: "Ai atins limita de 5 generări AI pentru astăzi." },
+      { status: 429 }
+    );
+  }
+
+  if (
+    error instanceof Error &&
+    error.message === "AI_GLOBAL_DAILY_LIMIT_REACHED"
+  ) {
+    return NextResponse.json(
+      { error: "Limita globală de 100 de generări AI pentru astăzi a fost atinsă. Revino mâine." },
       { status: 429 }
     );
   }
