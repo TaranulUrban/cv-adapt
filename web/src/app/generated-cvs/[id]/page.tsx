@@ -1,3 +1,6 @@
+import LocalizedText from "@/components/localized-text";
+import { getServerLocale } from "@/lib/i18n/server";
+import { uiText } from "@/lib/i18n/dictionary";
 
 import Link from "next/link";
 import { Suspense } from "react";
@@ -29,7 +32,7 @@ export default function GeneratedCVPage({
               CV adaptat cu AI
             </h1>
             <p className="mt-4 text-gray-400">
-              Se încarcă previzualizarea CV-ului...
+              <LocalizedText source="Se încarcă previzualizarea CV-ului..." />
             </p>
           </div>
         </main>
@@ -45,6 +48,8 @@ async function GeneratedCVContent({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const locale = await getServerLocale();
+
   await connection();
 
   const { id } = await params;
@@ -70,7 +75,7 @@ async function GeneratedCVContent({
       .maybeSingle();
 
   if (generatedError) {
-    throw new Error("Nu am putut încărca CV-ul generat.");
+    throw new Error(uiText(locale, "Nu am putut încărca CV-ul generat."));
   }
 
   if (!generatedCV) {
@@ -84,7 +89,7 @@ async function GeneratedCVContent({
 
   if (!validationResult.success) {
     throw new Error(
-      "CV-ul generat conține date invalide."
+      uiText(locale, "CV-ul generat conține date invalide.")
     );
   }
 
@@ -99,7 +104,7 @@ async function GeneratedCVContent({
       .maybeSingle();
 
   if (originalError) {
-    throw new Error("Nu am putut încărca CV-ul original.");
+    throw new Error(uiText(locale, "Nu am putut încărca CV-ul original."));
   }
 
   if (!originalCV) {
@@ -117,7 +122,7 @@ async function GeneratedCVContent({
     .filter(Boolean)
     .join(" ");
 
-  const en = generatedCV.cv_language === "en";
+  const en = locale === "en";
 
   const labels = en
     ? {
@@ -141,18 +146,18 @@ async function GeneratedCVContent({
       }
     : {
         back: "Înapoi la CV-urile generate",
-        title: "CV adaptat cu AI",
+        title: uiText(locale, "CV adaptat cu AI"),
         download: "Descarcă PDF",
         review: "Verifică înainte de utilizare",
         warning:
           "Verifică toate descrierile și rezumatul profesional generate de AI înainte să folosești acest CV.",
         contact: "Date de contact",
         summary: "Rezumat profesional",
-        experience: "Experiență profesională",
-        education: "Educație și studii",
-        skills: "Competențe profesionale",
-        languages: "Limbi străine",
-        present: "Prezent",
+        experience: uiText(locale, "Experiență profesională"),
+        education: uiText(locale, "Educație și studii"),
+        skills: uiText(locale, "Competențe profesionale"),
+        languages: uiText(locale, "Limbi străine"),
+        present: uiText(locale, "Prezent"),
         original: "Vezi CV-ul original",
         details: "Detalii generare",
         date: "Generat la",

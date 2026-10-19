@@ -1,22 +1,49 @@
-
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale } from "@/lib/i18n/client";
+
+const translations = {
+  ro: {
+    title: "Autentificare",
+    description: "Intră în contul tău pentru a continua.",
+    password: "Parolă",
+    submit: "Autentificare",
+    loading: "Se autentifică...",
+    noAccount: "Nu ai cont?",
+    register: "Înregistrează-te",
+    invalid: "Email sau parolă incorectă, ori cont neconfirmat.",
+    error: "A apărut o eroare. Încearcă din nou.",
+  },
+  en: {
+    title: "Log in",
+    description: "Log in to your account to continue.",
+    password: "Password",
+    submit: "Log in",
+    loading: "Logging in...",
+    noAccount: "Don't have an account?",
+    register: "Sign up",
+    invalid: "Incorrect email or password, or an unconfirmed account.",
+    error: "Something went wrong. Please try again.",
+  },
+};
 
 export default function LoginPage() {
   const router = useRouter();
+  const locale = useLocale();
+  const t = translations[locale];
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<"invalid" | "error" | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setMessage("");
+    setMessage(null);
     setLoading(true);
 
     try {
@@ -28,14 +55,14 @@ export default function LoginPage() {
       });
 
       if (error) {
-        setMessage("Email sau parolă incorectă, ori cont neconfirmat.");
+        setMessage("invalid");
         return;
       }
 
       router.push("/dashboard");
       router.refresh();
     } catch {
-      setMessage("A apărut o eroare. Încearcă din nou.");
+      setMessage("error");
     } finally {
       setLoading(false);
     }
@@ -49,11 +76,11 @@ export default function LoginPage() {
         </Link>
 
         <h1 className="mt-8 text-3xl font-bold">
-          Autentificare
+          {t.title}
         </h1>
 
         <p className="mt-2 text-slate-600">
-          Intră în contul tău pentru a continua.
+          {t.description}
         </p>
 
         <form onSubmit={handleLogin} className="mt-8 space-y-5">
@@ -69,13 +96,13 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-lg border border-slate-300 p-3"
-              placeholder="nume@exemplu.ro"
+              placeholder="name@example.com"
             />
           </div>
 
           <div>
             <label htmlFor="password" className="mb-2 block font-medium">
-              Parolă
+              {t.password}
             </label>
             <input
               id="password"
@@ -93,20 +120,20 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full rounded-lg bg-blue-700 p-3 font-semibold text-white hover:bg-blue-800 disabled:opacity-50"
           >
-            {loading ? "Se autentifică..." : "Login"}
+            {loading ? t.loading : t.submit}
           </button>
         </form>
 
         {message && (
           <p role="status" className="mt-5 text-sm text-red-600">
-            {message}
+            {t[message]}
           </p>
         )}
 
         <p className="mt-6 text-center text-sm text-slate-600">
-          Nu ai cont?{" "}
+          {t.noAccount}{" "}
           <Link href="/register" className="font-semibold text-blue-700">
-            Register
+            {t.register}
           </Link>
         </p>
       </div>

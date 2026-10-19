@@ -1,3 +1,6 @@
+import LocalizedText from "@/components/localized-text";
+import { getServerLocale } from "@/lib/i18n/server";
+import { uiText } from "@/lib/i18n/dictionary";
 
 import Link from "next/link";
 import { Suspense } from "react";
@@ -17,7 +20,7 @@ export default function AdminPage() {
               CV Adapt — Admin
             </h1>
             <p className="mt-6 text-slate-600">
-              Se încarcă panoul de administrare...
+              <LocalizedText source="Se încarcă panoul de administrare..." />
             </p>
           </div>
         </main>
@@ -29,6 +32,8 @@ export default function AdminPage() {
 }
 
 async function AdminContent() {
+  const locale = await getServerLocale();
+
   await connection();
 
   const supabase = await createClient();
@@ -58,7 +63,7 @@ async function AdminContent() {
     .order("created_at", { ascending: false });
 
   if (usersError) {
-    throw new Error("Nu am putut încărca lista utilizatorilor.");
+    throw new Error(uiText(locale, "Nu am putut încărca lista utilizatorilor."));
   }
 
   return (
@@ -72,38 +77,29 @@ async function AdminContent() {
           <Link
             href="/dashboard"
             className="font-medium text-blue-700 hover:underline"
-          >
-            Înapoi la Dashboard
-          </Link>
+          >{uiText(locale, "Înapoi la Dashboard")}</Link>
         </header>
 
         <section className="py-12">
-          <h2 className="text-3xl font-bold">
-            Panou de administrare
-          </h2>
+          <h2 className="text-3xl font-bold">{uiText(locale, "Panou de administrare")}</h2>
 
-          <p className="mt-3 text-slate-600">
-            Bine ai venit! Ai acces la această pagină deoarece
-            contul tău are rolul Admin.
-          </p>
+          <p className="mt-3 text-slate-600">{uiText(locale, "Bine ai venit! Ai acces la această pagină deoarece contul tău are rolul Admin.")}</p>
 
           <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-            <h3 className="text-xl font-semibold">
-              Administrarea utilizatorilor
-            </h3>
+            <h3 className="text-xl font-semibold">{uiText(locale, "Administrarea utilizatorilor")}</h3>
 
             <p className="mt-3 text-slate-600">
-              Utilizatori înregistrați: {users?.length ?? 0}
+              {uiText(locale, "Utilizatori înregistrați:")} {users?.length ?? 0}
             </p>
 
             <div className="mt-6 overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200">
-                    <th className="px-3 py-3">ID utilizator</th>
-                    <th className="px-3 py-3">Rol</th>
-                    <th className="px-3 py-3">Data creării</th>
-                    <th className="px-3 py-3">Acțiuni</th>
+                    <th className="px-3 py-3">{uiText(locale, "ID utilizator")}</th>
+                    <th className="px-3 py-3">{uiText(locale, "Rol")}</th>
+                    <th className="px-3 py-3">{uiText(locale, "Data creării")}</th>
+                    <th className="px-3 py-3">{uiText(locale, "Acțiuni")}</th>
                   </tr>
                 </thead>
 
@@ -124,7 +120,7 @@ async function AdminContent() {
                       <td className="px-3 py-3">
                         {new Date(
                           userProfile.created_at
-                        ).toLocaleDateString("ro-RO")}
+                        ).toLocaleDateString(locale === "en" ? "en-GB" : "ro-RO")}
                       </td>
 
                       <td className="px-3 py-3">

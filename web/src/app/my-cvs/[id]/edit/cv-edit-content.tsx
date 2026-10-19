@@ -1,3 +1,5 @@
+import { getServerLocale } from "@/lib/i18n/server";
+import { uiText } from "@/lib/i18n/dictionary";
 
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -10,6 +12,7 @@ export default async function EditCVPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const locale = await getServerLocale();
   const { id } = await params;
   const supabase = await createClient();
 
@@ -32,7 +35,7 @@ export default async function EditCVPage({
     .maybeSingle();
 
   if (error) {
-    throw new Error("Nu am putut încărca CV-ul pentru editare.");
+    throw new Error(uiText(locale, "Nu am putut încărca CV-ul pentru editare."));
   }
 
   if (!cv) {
@@ -44,17 +47,11 @@ export default async function EditCVPage({
       <Link
         href={`/my-cvs/${id}`}
         className="text-sm text-blue-400 hover:underline"
-      >
-        ← Înapoi la CV
-      </Link>
+      >{uiText(locale, "← Înapoi la CV")}</Link>
 
-      <h1 className="mt-6 text-3xl font-bold">
-        Editează CV-ul
-      </h1>
+      <h1 className="mt-6 text-3xl font-bold">{uiText(locale, "Editează CV-ul")}</h1>
 
-      <p className="mt-3 text-gray-400">
-        Modifică informațiile din CV-ul tău.
-      </p>
+      <p className="mt-3 text-gray-400">{uiText(locale, "Modifică informațiile din CV-ul tău.")}</p>
 
       <CVForm initialData={cv as SavedCV} />
     </main>

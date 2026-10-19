@@ -1,5 +1,7 @@
 
 "use client";
+import { useLocale } from "@/lib/i18n/client";
+import { uiText } from "@/lib/i18n/dictionary";
 
 import { useState } from "react";
 
@@ -37,6 +39,8 @@ function normalizeIds<T extends { id: number }>(items: T[]): T[] {
 }
 
 export default function CVForm({ initialData }: CVFormProps) {
+  const locale = useLocale();
+
   const [personalInfo, setPersonalInfo] = useState({
     firstName: initialData?.personal_info.firstName ?? "",
     lastName: initialData?.personal_info.lastName ?? "",
@@ -85,7 +89,7 @@ export default function CVForm({ initialData }: CVFormProps) {
       !personalInfo.lastName.trim()
     ) {
       setSaveMessage(
-        "Completează prenumele și numele înainte de salvare."
+        uiText(locale, "Completează prenumele și numele înainte de salvare.")
       );
       return;
     }
@@ -124,14 +128,14 @@ export default function CVForm({ initialData }: CVFormProps) {
 
       setSaveMessage(
         initialData
-          ? "CV-ul a fost actualizat cu succes!"
-          : "CV-ul a fost salvat cu succes în Supabase!"
+          ? uiText(locale, "CV-ul a fost actualizat cu succes!")
+          : uiText(locale, "CV-ul a fost salvat cu succes în Supabase!")
       );
     } catch (error) {
       setSaveMessage(
         error instanceof Error
           ? error.message
-          : "A apărut o eroare la salvare."
+          : uiText(locale, "A apărut o eroare la salvare.")
       );
     } finally {
       setIsSaving(false);
@@ -154,18 +158,14 @@ export default function CVForm({ initialData }: CVFormProps) {
   return (
     <>
       <section className="mt-8 rounded-xl border border-gray-700 p-6">
-        <h2 className="text-xl font-semibold">
-          Date personale
-        </h2>
+        <h2 className="text-xl font-semibold">{uiText(locale, "Date personale")}</h2>
 
         <div className="mt-6 grid gap-5 sm:grid-cols-2">
           <div>
             <label
               htmlFor="firstName"
               className="block text-sm font-medium"
-            >
-              Prenume
-            </label>
+            >{uiText(locale, "Prenume")}</label>
             <input
               id="firstName"
               type="text"
@@ -181,9 +181,7 @@ export default function CVForm({ initialData }: CVFormProps) {
             <label
               htmlFor="lastName"
               className="block text-sm font-medium"
-            >
-              Nume
-            </label>
+            >{uiText(locale, "Nume")}</label>
             <input
               id="lastName"
               type="text"
@@ -217,9 +215,7 @@ export default function CVForm({ initialData }: CVFormProps) {
             <label
               htmlFor="phone"
               className="block text-sm font-medium"
-            >
-              Telefon
-            </label>
+            >{uiText(locale, "Telefon")}</label>
             <input
               id="phone"
               type="tel"
@@ -235,9 +231,7 @@ export default function CVForm({ initialData }: CVFormProps) {
             <label
               htmlFor="city"
               className="block text-sm font-medium"
-            >
-              Localitate
-            </label>
+            >{uiText(locale, "Localitate")}</label>
             <input
               id="city"
               type="text"
@@ -287,12 +281,12 @@ export default function CVForm({ initialData }: CVFormProps) {
           className="rounded-lg bg-blue-600 px-6 py-4 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSaving
-            ? "Se salvează..."
+            ? uiText(locale, "Se salvează...")
             : initialData
-              ? "Salvează modificările"
+              ? uiText(locale, "Salvează modificările")
               : savedCvId
-                ? "CV salvat"
-                : "Salvează CV"}
+                ? uiText(locale, "CV salvat")
+                : uiText(locale, "Salvează CV")}
         </button>
 
         {saveMessage && (

@@ -1,5 +1,7 @@
 
 "use client";
+import { useLocale } from "@/lib/i18n/client";
+import { uiText } from "@/lib/i18n/dictionary";
 
 import { useState } from "react";
 
@@ -12,6 +14,8 @@ import { useState } from "react";
     value: skills,
     onChange,
     }: SkillsSectionProps) {
+  const locale = useLocale();
+
 
 
   const [newSkill, setNewSkill] = useState("");
@@ -35,15 +39,9 @@ import { useState } from "react";
 
   return (
     <section className="mt-8 rounded-xl border border-gray-700 p-6">
-      <h2 className="text-xl font-semibold">
-        Competențe profesionale
-      </h2>
+      <h2 className="text-xl font-semibold">{uiText(locale, "Competențe profesionale")}</h2>
 
-      <p className="mt-2 text-sm text-gray-400">
-        Adaugă doar competențele pe care le deții.
-        AI-ul le va putea evidenția în funcție de
-        cerințele jobului, fără să inventeze altele.
-      </p>
+      <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă doar competențele pe care le deții. AI-ul le va putea evidenția în funcție de cerințele jobului, fără să inventeze altele.")}</p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <input
@@ -57,7 +55,7 @@ import { useState } from "react";
             }
           }}
           placeholder="Ex: Project Management"
-          aria-label="Competență nouă"
+          aria-label={uiText(locale, "Competență nouă")}
           className="w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3"
         />
 
@@ -65,9 +63,7 @@ import { useState } from "react";
           type="button"
           onClick={addSkill}
           className="rounded-lg border border-gray-500 px-5 py-3 font-medium hover:bg-gray-800"
-        >
-          + Adaugă
-        </button>
+        >{uiText(locale, "+ Adaugă")}</button>
       </div>
 
       {skills.length > 0 && (

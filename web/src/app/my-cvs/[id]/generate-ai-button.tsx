@@ -1,5 +1,7 @@
 
 "use client";
+import { useLocale } from "@/lib/i18n/client";
+import { uiText } from "@/lib/i18n/dictionary";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,6 +19,8 @@ type GenerationResponse = {
 export default function GenerateAIButton({
   cvId,
 }: GenerateAIButtonProps) {
+  const locale = useLocale();
+
   const router = useRouter();
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -43,13 +47,13 @@ export default function GenerateAIButton({
 
       if (!response.ok) {
         throw new Error(
-          result.error || "Nu am putut genera CV-ul."
+          uiText(locale, result.error || "Nu am putut genera CV-ul.")
         );
       }
 
       if (!result.success || !result.generatedCvId) {
         throw new Error(
-          "Serverul nu a returnat identificatorul CV-ului generat."
+          uiText(locale, "Serverul nu a returnat identificatorul CV-ului generat.")
         );
       }
 
@@ -58,7 +62,7 @@ export default function GenerateAIButton({
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "A apărut o eroare neașteptată."
+          : uiText(locale, "A apărut o eroare neașteptată.")
       );
     } finally {
       setIsGenerating(false);
@@ -74,15 +78,12 @@ export default function GenerateAIButton({
         className="rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isGenerating
-          ? "Se generează CV-ul..."
-          : "Generează CV cu AI"}
+          ? uiText(locale, "Se generează CV-ul...")
+          : uiText(locale, "Generează CV cu AI")}
       </button>
 
       {isGenerating && (
-        <p role="status" className="mt-3 text-sm text-gray-400">
-          GPT-5 mini adaptează CV-ul pentru jobul ales.
-          Te rugăm să aștepți și să nu închizi pagina.
-        </p>
+        <p role="status" className="mt-3 text-sm text-gray-400">{uiText(locale, "GPT-5 mini adaptează CV-ul pentru jobul ales. Te rugăm să aștepți și să nu închizi pagina.")}</p>
       )}
 
       {errorMessage && (
@@ -94,10 +95,7 @@ export default function GenerateAIButton({
         </p>
       )}
 
-      <p className="mt-3 text-xs text-gray-400">
-        Maximum 5 generări pe zi, inclusiv încercările eșuate.
-        Generarea poate consuma credit API.
-      </p>
+      <p className="mt-3 text-xs text-gray-400">{uiText(locale, "Maximum 5 generări pe zi, inclusiv încercările eșuate. Generarea poate consuma credit API.")}</p>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 
 "use client";
+import { useLocale } from "@/lib/i18n/client";
+import { uiText } from "@/lib/i18n/dictionary";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -14,6 +16,8 @@ export default function RoleButton({
   userId: string;
   currentRole: Role;
 }) {
+  const locale = useLocale();
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -26,7 +30,7 @@ export default function RoleButton({
 
   async function handleChange() {
     const confirmed = window.confirm(
-      `Sigur dorești să schimbi rolul în ${newRole}?`
+      `${uiText(locale, "Sigur dorești să schimbi rolul în")} ${newRole}?`
     );
 
     if (!confirmed) return;
@@ -38,13 +42,13 @@ export default function RoleButton({
       const result = await changeUserRole(userId, newRole);
 
       if (!result.success) {
-        setError(result.error ?? "A apărut o eroare.");
+        setError(result.error ?? uiText(locale, "A apărut o eroare."));
         return;
       }
 
       router.refresh();
     } catch {
-      setError("Nu am putut schimba rolul.");
+      setError(uiText(locale, "Nu am putut schimba rolul."));
     } finally {
       setLoading(false);
     }
@@ -58,7 +62,7 @@ export default function RoleButton({
         disabled={loading}
         className="rounded-lg bg-blue-700 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-800 disabled:opacity-50"
       >
-        {loading ? "Se salvează..." : `Schimbă în ${newRole}`}
+        {loading ? uiText(locale, "Se salvează...") : `${uiText(locale, "Schimbă în")} ${newRole}`}
       </button>
 
       {error && (

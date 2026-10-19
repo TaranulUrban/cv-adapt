@@ -1,5 +1,7 @@
 
 "use client";
+import { useLocale } from "@/lib/i18n/client";
+import { uiText } from "@/lib/i18n/dictionary";
 
 
 export type Language = {
@@ -27,6 +29,8 @@ export default function LanguagesSection({
   value,
   onChange,
 }: LanguagesSectionProps) {
+  const locale = useLocale();
+
   const nextId = Math.max(0, ...value.map((item) => item.id)) + 1;
 
   function addLanguage() {
@@ -60,13 +64,9 @@ export default function LanguagesSection({
 
   return (
     <section className="mt-8 rounded-xl border border-gray-700 p-6">
-      <h2 className="text-xl font-semibold">
-        Limbi străine
-      </h2>
+      <h2 className="text-xl font-semibold">{uiText(locale, "Limbi străine")}</h2>
 
-      <p className="mt-2 text-sm text-gray-400">
-        Adaugă limbile cunoscute și nivelul tău real.
-      </p>
+      <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă limbile cunoscute și nivelul tău real.")}</p>
 
       {value.map((language, index) => (
         <div
@@ -75,16 +75,14 @@ export default function LanguagesSection({
         >
           <div className="flex items-center justify-between gap-4">
             <h3 className="font-semibold">
-              Limba {index + 1}
+              {uiText(locale, "Limba")} {index + 1}
             </h3>
 
             <button
               type="button"
               onClick={() => removeLanguage(language.id)}
               className="text-sm text-red-400 hover:underline"
-            >
-              Elimină
-            </button>
+            >{uiText(locale, "Elimină")}</button>
           </div>
 
           <div className="mt-4 grid gap-5 sm:grid-cols-2">
@@ -92,9 +90,7 @@ export default function LanguagesSection({
               <label
                 htmlFor={`language-${language.id}`}
                 className="block text-sm"
-              >
-                Limba
-              </label>
+              >{uiText(locale, "Limba")}</label>
               <input
                 id={`language-${language.id}`}
                 type="text"
@@ -106,7 +102,7 @@ export default function LanguagesSection({
                     e.target.value
                   )
                 }
-                placeholder="Ex: Engleză"
+                placeholder={uiText(locale, "Ex: Engleză")}
                 className={inputClass}
               />
             </div>
@@ -115,9 +111,7 @@ export default function LanguagesSection({
               <label
                 htmlFor={`level-${language.id}`}
                 className="block text-sm"
-              >
-                Nivel
-              </label>
+              >{uiText(locale, "Nivel")}</label>
               <select
                 id={`level-${language.id}`}
                 value={language.level}
@@ -136,7 +130,7 @@ export default function LanguagesSection({
                     value={level.value}
                     className="bg-gray-900"
                   >
-                    {level.label}
+                    {uiText(locale, level.label)}
                   </option>
                 ))}
               </select>
@@ -149,9 +143,7 @@ export default function LanguagesSection({
         type="button"
         onClick={addLanguage}
         className="mt-6 rounded-lg border border-gray-500 px-5 py-3 font-medium hover:bg-gray-800"
-      >
-        + Adaugă limbă
-      </button>
+      >{uiText(locale, "+ Adaugă limbă")}</button>
     </section>
   );
 }

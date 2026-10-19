@@ -1,5 +1,7 @@
 
 "use client";
+import { useLocale } from "@/lib/i18n/client";
+import { uiText } from "@/lib/i18n/dictionary";
 
 
 export type Education = {
@@ -20,6 +22,8 @@ export default function EducationSection({
   value,
   onChange,
 }: EducationSectionProps) {
+  const locale = useLocale();
+
   const nextId = Math.max(0, ...value.map((item) => item.id)) + 1;
 
   function addEducation() {
@@ -61,13 +65,9 @@ export default function EducationSection({
 
   return (
     <section className="mt-8 rounded-xl border border-gray-700 p-6">
-      <h2 className="text-xl font-semibold">
-        Educație și studii
-      </h2>
+      <h2 className="text-xl font-semibold">{uiText(locale, "Educație și studii")}</h2>
 
-      <p className="mt-2 text-sm text-gray-400">
-        Adaugă studiile relevante pentru CV-ul tău.
-      </p>
+      <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă studiile relevante pentru CV-ul tău.")}</p>
 
       {value.map((education, index) => (
         <div
@@ -76,16 +76,14 @@ export default function EducationSection({
         >
           <div className="flex items-center justify-between gap-4">
             <h3 className="font-semibold">
-              Studii {index + 1}
+              {uiText(locale, "Studii")} {index + 1}
             </h3>
 
             <button
               type="button"
               onClick={() => removeEducation(education.id)}
               className="text-sm text-red-400 hover:underline"
-            >
-              Elimină
-            </button>
+            >{uiText(locale, "Elimină")}</button>
           </div>
 
           <div className="mt-4 grid gap-5 sm:grid-cols-2">
@@ -93,9 +91,7 @@ export default function EducationSection({
               <label
                 htmlFor={`institution-${education.id}`}
                 className="block text-sm"
-              >
-                Instituție de învățământ
-              </label>
+              >{uiText(locale, "Instituție de învățământ")}</label>
               <input
                 id={`institution-${education.id}`}
                 type="text"
@@ -107,7 +103,7 @@ export default function EducationSection({
                     e.target.value
                   )
                 }
-                placeholder="Ex: Universitatea Babeș-Bolyai"
+                placeholder={uiText(locale, "Ex: Universitatea Babeș-Bolyai")}
                 className={inputClass}
               />
             </div>
@@ -116,9 +112,7 @@ export default function EducationSection({
               <label
                 htmlFor={`degree-${education.id}`}
                 className="block text-sm"
-              >
-                Diplomă / Specializare
-              </label>
+              >{uiText(locale, "Diplomă / Specializare")}</label>
               <input
                 id={`degree-${education.id}`}
                 type="text"
@@ -130,7 +124,7 @@ export default function EducationSection({
                     e.target.value
                   )
                 }
-                placeholder="Ex: Licență în Informatică"
+                placeholder={uiText(locale, "Ex: Licență în Informatică")}
                 className={inputClass}
               />
             </div>
@@ -139,9 +133,7 @@ export default function EducationSection({
               <label
                 htmlFor={`educationStart-${education.id}`}
                 className="block text-sm"
-              >
-                Data începerii
-              </label>
+              >{uiText(locale, "Data începerii")}</label>
               <input
                 id={`educationStart-${education.id}`}
                 type="month"
@@ -162,9 +154,7 @@ export default function EducationSection({
                 <label
                   htmlFor={`educationEnd-${education.id}`}
                   className="block text-sm"
-                >
-                  Data încheierii
-                </label>
+                >{uiText(locale, "Data încheierii")}</label>
                 <input
                   id={`educationEnd-${education.id}`}
                   type="month"
@@ -204,9 +194,7 @@ export default function EducationSection({
 }}
 
 
-            />
-            Studiez aici în prezent
-          </label>
+            />{uiText(locale, "Studiez aici în prezent")}</label>
         </div>
       ))}
 
@@ -214,9 +202,7 @@ export default function EducationSection({
         type="button"
         onClick={addEducation}
         className="mt-6 rounded-lg border border-gray-500 px-5 py-3 font-medium hover:bg-gray-800"
-      >
-        + Adaugă studii
-      </button>
+      >{uiText(locale, "+ Adaugă studii")}</button>
     </section>
   );
 }

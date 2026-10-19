@@ -1,5 +1,7 @@
 
 "use client";
+import { useLocale } from "@/lib/i18n/client";
+import { uiText } from "@/lib/i18n/dictionary";
 
 
 export type Experience = {
@@ -21,6 +23,8 @@ export default function ExperienceSection({
   value,
   onChange,
 }: ExperienceSectionProps) {
+  const locale = useLocale();
+
   const nextId = Math.max(0, ...value.map((item) => item.id)) + 1;
 
   function addExperience() {
@@ -63,14 +67,9 @@ export default function ExperienceSection({
 
   return (
     <section className="mt-8 rounded-xl border border-gray-700 p-6">
-      <h2 className="text-xl font-semibold">
-        Experiență profesională
-      </h2>
+      <h2 className="text-xl font-semibold">{uiText(locale, "Experiență profesională")}</h2>
 
-      <p className="mt-2 text-sm text-gray-400">
-        Adaugă experiențele tale profesionale.
-        Dacă nu ai experiență, poți lăsa secțiunea goală.
-      </p>
+      <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă experiențele tale profesionale. Dacă nu ai experiență, poți lăsa secțiunea goală.")}</p>
 
       {value.map((experience, index) => (
         <div
@@ -79,16 +78,14 @@ export default function ExperienceSection({
         >
           <div className="flex items-center justify-between gap-4">
             <h3 className="font-semibold">
-              Experiența {index + 1}
+              {uiText(locale, "Experiența")} {index + 1}
             </h3>
 
             <button
               type="button"
               onClick={() => removeExperience(experience.id)}
               className="text-sm text-red-400 hover:underline"
-            >
-              Elimină
-            </button>
+            >{uiText(locale, "Elimină")}</button>
           </div>
 
           <div className="mt-4 grid gap-5 sm:grid-cols-2">
@@ -96,9 +93,7 @@ export default function ExperienceSection({
               <label
                 htmlFor={`jobTitle-${experience.id}`}
                 className="block text-sm"
-              >
-                Funcție
-              </label>
+              >{uiText(locale, "Funcție")}</label>
               <input
                 id={`jobTitle-${experience.id}`}
                 type="text"
@@ -110,7 +105,7 @@ export default function ExperienceSection({
                     e.target.value
                   )
                 }
-                placeholder="Ex: Project Manager"
+                placeholder={uiText(locale, "Ex: Project Manager")}
                 className={inputClass}
               />
             </div>
@@ -119,9 +114,7 @@ export default function ExperienceSection({
               <label
                 htmlFor={`company-${experience.id}`}
                 className="block text-sm"
-              >
-                Companie
-              </label>
+              >{uiText(locale, "Companie")}</label>
               <input
                 id={`company-${experience.id}`}
                 type="text"
@@ -133,7 +126,7 @@ export default function ExperienceSection({
                     e.target.value
                   )
                 }
-                placeholder="Ex: Compania ABC"
+                placeholder={uiText(locale, "Ex: Compania ABC")}
                 className={inputClass}
               />
             </div>
@@ -142,9 +135,7 @@ export default function ExperienceSection({
               <label
                 htmlFor={`startDate-${experience.id}`}
                 className="block text-sm"
-              >
-                Data începerii
-              </label>
+              >{uiText(locale, "Data începerii")}</label>
               <input
                 id={`startDate-${experience.id}`}
                 type="month"
@@ -165,9 +156,7 @@ export default function ExperienceSection({
                 <label
                   htmlFor={`endDate-${experience.id}`}
                   className="block text-sm"
-                >
-                  Data încheierii
-                </label>
+                >{uiText(locale, "Data încheierii")}</label>
                 <input
                   id={`endDate-${experience.id}`}
                   type="month"
@@ -205,17 +194,13 @@ export default function ExperienceSection({
                     )
                 );
                 }}
-            />
-            Lucrez aici în prezent
-          </label>
+            />{uiText(locale, "Lucrez aici în prezent")}</label>
 
           <div className="mt-5">
             <label
               htmlFor={`description-${experience.id}`}
               className="block text-sm"
-            >
-              Responsabilități și realizări
-            </label>
+            >{uiText(locale, "Responsabilități și realizări")}</label>
             <textarea
               id={`description-${experience.id}`}
               rows={4}
@@ -227,7 +212,7 @@ export default function ExperienceSection({
                   e.target.value
                 )
               }
-              placeholder="Descrie responsabilitățile și realizările..."
+              placeholder={uiText(locale, "Descrie responsabilitățile și realizările...")}
               className={inputClass}
             />
           </div>
@@ -238,9 +223,7 @@ export default function ExperienceSection({
         type="button"
         onClick={addExperience}
         className="mt-6 rounded-lg border border-gray-500 px-5 py-3 font-medium hover:bg-gray-800"
-      >
-        + Adaugă experiență
-      </button>
+      >{uiText(locale, "+ Adaugă experiență")}</button>
     </section>
   );
 }

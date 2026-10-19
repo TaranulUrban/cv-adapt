@@ -1,3 +1,5 @@
+import { getServerLocale } from "@/lib/i18n/server";
+import { uiText } from "@/lib/i18n/dictionary";
 
 import Link from "next/link";
 import { connection } from "next/server";
@@ -51,6 +53,7 @@ export default async function CVDetailsPage({
   params: Promise<{ id: string }>;
 }) {
   await connection();
+  const locale = await getServerLocale();
 
   const { id } = await params;
   const supabase = await createClient();
@@ -74,7 +77,7 @@ export default async function CVDetailsPage({
     .maybeSingle();
 
   if (error) {
-    throw new Error("Nu am putut încărca CV-ul.");
+    throw new Error(uiText(locale, "Nu am putut încărca CV-ul."));
   }
 
   if (!cv) {
@@ -104,63 +107,44 @@ export default async function CVDetailsPage({
         <Link
           href="/my-cvs"
           className="text-sm text-blue-400 hover:underline"
-        >
-          ← Înapoi la CV-urile mele
-        </Link>
+        >{uiText(locale, "← Înapoi la CV-urile mele")}</Link>
 
         <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">
-              {cv.title || "CV fără titlu"}
+              {cv.title || uiText(locale, "CV fără titlu")}
             </h1>
 
-            <p className="mt-3 text-gray-400">
-              Acesta este CV-ul tău original.
-            </p>
+            <p className="mt-3 text-gray-400">{uiText(locale, "Acesta este CV-ul tău original.")}</p>
           </div>
 
           <Link
             href={`/my-cvs/${cv.id}/edit`}
             className="rounded-lg border border-gray-600 px-5 py-3 font-medium hover:bg-gray-800"
-          >
-            Editează CV
-          </Link>
+          >{uiText(locale, "Editează CV")}</Link>
         </div>
 
         <section className="mt-8 rounded-xl border border-blue-800 bg-blue-950/30 p-6">
-          <h2 className="text-xl font-semibold">
-            Adaptează CV-ul cu AI
-          </h2>
+          <h2 className="text-xl font-semibold">{uiText(locale, "Adaptează CV-ul cu AI")}</h2>
 
-          <p className="mt-3 text-sm leading-6 text-gray-300">
-            GPT-5 mini va adapta descrierile profesionale
-            pentru jobul ales, păstrând informațiile originale.
-          </p>
+          <p className="mt-3 text-sm leading-6 text-gray-300">{uiText(locale, "GPT-5 mini va adapta descrierile profesionale pentru jobul ales, păstrând informațiile originale.")}</p>
 
           {canGenerate ? (
             <GenerateAIButton cvId={cv.id} />
           ) : (
             <div className="mt-5">
-              <p className="text-sm text-amber-300">
-                Pentru generare ai nevoie de o descriere a
-                jobului de minimum 50 de caractere și de
-                limba CV-ului (română sau engleză).
-              </p>
+              <p className="text-sm text-amber-300">{uiText(locale, "Pentru generare ai nevoie de o descriere a jobului de minimum 50 de caractere și de limba CV-ului (română sau engleză).")}</p>
 
               <Link
                 href={`/my-cvs/${cv.id}/edit`}
                 className="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-3 text-sm font-medium hover:bg-blue-700"
-              >
-                Completează informațiile
-              </Link>
+              >{uiText(locale, "Completează informațiile")}</Link>
             </div>
           )}
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">
-            Date personale
-          </h2>
+          <h2 className="text-xl font-semibold">{uiText(locale, "Date personale")}</h2>
 
           <div className="mt-4 space-y-2">
             <p>
@@ -173,14 +157,10 @@ export default async function CVDetailsPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">
-            Experiență profesională
-          </h2>
+          <h2 className="text-xl font-semibold">{uiText(locale, "Experiență profesională")}</h2>
 
           {experiences.length === 0 ? (
-            <p className="mt-4 text-gray-400">
-              Nu există experiențe adăugate.
-            </p>
+            <p className="mt-4 text-gray-400">{uiText(locale, "Nu există experiențe adăugate.")}</p>
           ) : (
             experiences.map((experience, index) => (
               <article
@@ -196,7 +176,7 @@ export default async function CVDetailsPage({
                 <p className="mt-1 text-sm text-gray-400">
                   {experience.startDate} –{" "}
                   {experience.current
-                    ? "Prezent"
+                    ? uiText(locale, "Prezent")
                     : experience.endDate}
                 </p>
 
@@ -209,14 +189,10 @@ export default async function CVDetailsPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">
-            Educație și studii
-          </h2>
+          <h2 className="text-xl font-semibold">{uiText(locale, "Educație și studii")}</h2>
 
           {education.length === 0 ? (
-            <p className="mt-4 text-gray-400">
-              Nu există studii adăugate.
-            </p>
+            <p className="mt-4 text-gray-400">{uiText(locale, "Nu există studii adăugate.")}</p>
           ) : (
             education.map((item, index) => (
               <article
@@ -232,7 +208,7 @@ export default async function CVDetailsPage({
                 <p className="mt-1 text-sm text-gray-400">
                   {item.startDate} –{" "}
                   {item.ongoing
-                    ? "Prezent"
+                    ? uiText(locale, "Prezent")
                     : item.endDate}
                 </p>
               </article>
@@ -241,15 +217,11 @@ export default async function CVDetailsPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">
-            Competențe profesionale
-          </h2>
+          <h2 className="text-xl font-semibold">{uiText(locale, "Competențe profesionale")}</h2>
 
           <div className="mt-4 flex flex-wrap gap-2">
             {skills.length === 0 ? (
-              <p className="text-gray-400">
-                Nu există competențe adăugate.
-              </p>
+              <p className="text-gray-400">{uiText(locale, "Nu există competențe adăugate.")}</p>
             ) : (
               skills.map((skill, index) => (
                 <span
@@ -264,14 +236,10 @@ export default async function CVDetailsPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">
-            Limbi străine
-          </h2>
+          <h2 className="text-xl font-semibold">{uiText(locale, "Limbi străine")}</h2>
 
           {languages.length === 0 ? (
-            <p className="mt-4 text-gray-400">
-              Nu există limbi adăugate.
-            </p>
+            <p className="mt-4 text-gray-400">{uiText(locale, "Nu există limbi adăugate.")}</p>
           ) : (
             languages.map((language, index) => (
               <p
@@ -285,17 +253,15 @@ export default async function CVDetailsPage({
         </section>
 
         <section className="mt-8 rounded-xl border border-gray-700 p-6">
-          <h2 className="text-xl font-semibold">
-            Jobul pentru care aplici
-          </h2>
+          <h2 className="text-xl font-semibold">{uiText(locale, "Jobul pentru care aplici")}</h2>
 
           <p className="mt-4">
-            Limba CV-ului:{" "}
+            {uiText(locale, "Limba CV-ului")}:{" "}
             {job.cvLanguage === "en"
-              ? "Engleză"
+              ? uiText(locale, "Engleză")
               : job.cvLanguage === "ro"
-                ? "Română"
-                : "Neselectată"}
+                ? uiText(locale, "Română")
+                : uiText(locale, "Neselectată")}
           </p>
 
           {job.jobUrl && (
@@ -309,9 +275,7 @@ export default async function CVDetailsPage({
               {job.jobDescription}
             </p>
           ) : (
-            <p className="mt-3 text-gray-400">
-              Nu ai adăugat o descriere de job.
-            </p>
+            <p className="mt-3 text-gray-400">{uiText(locale, "Nu ai adăugat o descriere de job.")}</p>
           )}
         </section>
 
@@ -319,16 +283,12 @@ export default async function CVDetailsPage({
           <Link
             href={`/my-cvs/${cv.id}/edit`}
             className="rounded-lg border border-gray-600 px-5 py-3 font-medium hover:bg-gray-800"
-          >
-            Editează CV
-          </Link>
+          >{uiText(locale, "Editează CV")}</Link>
 
           <Link
             href="/generated-cvs"
             className="rounded-lg border border-gray-600 px-5 py-3 font-medium hover:bg-gray-800"
-          >
-            CV-uri generate cu AI
-          </Link>
+          >{uiText(locale, "CV-uri generate cu AI")}</Link>
         </div>
       </div>
     </main>

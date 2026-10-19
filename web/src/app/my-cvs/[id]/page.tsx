@@ -1,3 +1,4 @@
+import LocalizedText from "@/components/localized-text";
 import { Suspense } from "react";
 import CVDetailsContent from "./cv-details-content";
 
@@ -10,7 +11,7 @@ export default function CVDetailsPage({
     <Suspense
       fallback={
         <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
-          <p>Se încarcă CV-ul...</p>
+          <p><LocalizedText source="Se încarcă CV-ul..." /></p>
         </main>
       }
     >
