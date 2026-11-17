@@ -61,18 +61,18 @@ export default function EducationSection({
   }
 
   const inputClass =
-    "mt-2 block w-full min-w-0 rounded-lg border border-gray-600 bg-transparent px-3 py-3 text-base sm:px-4";
+    "mt-2 block w-full min-w-0 rounded-lg border border-slate-300 bg-white px-3 py-3 text-base sm:px-4";
 
   return (
-    <section className="mt-6 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
+    <section className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:mt-8 sm:p-6">
       <h2 className="text-xl font-semibold">{uiText(locale, "Educație și studii")}</h2>
 
-      <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă studiile relevante pentru CV-ul tău.")}</p>
+      <p className="mt-2 text-sm text-slate-500">{uiText(locale, "Adaugă studiile relevante pentru CV-ul tău.")}</p>
 
       {value.map((education, index) => (
         <div
           key={education.id}
-          className="mt-6 border-t border-gray-700 pt-6"
+          className="mt-6 border-t border-slate-200 pt-6"
         >
           <div className="flex items-center justify-between gap-4">
             <h3 className="font-semibold">
@@ -201,7 +201,7 @@ export default function EducationSection({
       <button
         type="button"
         onClick={addEducation}
-        className="mt-6 rounded-lg border border-gray-500 px-5 py-3 font-medium hover:bg-gray-800"
+        className="mt-6 rounded-lg border border-slate-300 px-5 py-3 font-medium hover:bg-orange-50"
       >{uiText(locale, "+ Adaugă studii")}</button>
     </section>
   );

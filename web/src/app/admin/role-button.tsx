@@ -60,7 +60,7 @@ export default function RoleButton({
         type="button"
         onClick={handleChange}
         disabled={loading}
-        className="rounded-lg bg-blue-700 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-800 disabled:opacity-50"
+        className="rounded-lg bg-[#ef5135] px-3 py-2 text-xs font-semibold text-white hover:bg-[#d8432a] disabled:opacity-50"
       >
         {loading ? uiText(locale, "Se salvează...") : `${uiText(locale, "Schimbă în")} ${newRole}`}
       </button>

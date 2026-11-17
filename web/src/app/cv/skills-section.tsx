@@ -38,10 +38,10 @@ import { useState } from "react";
   }
 
   return (
-    <section className="mt-6 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
+    <section className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:mt-8 sm:p-6">
       <h2 className="text-xl font-semibold">{uiText(locale, "Competențe profesionale")}</h2>
 
-      <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă doar competențele pe care le deții. AI-ul le va putea evidenția în funcție de cerințele jobului, fără să inventeze altele.")}</p>
+      <p className="mt-2 text-sm text-slate-500">{uiText(locale, "Adaugă doar competențele pe care le deții. AI-ul le va putea evidenția în funcție de cerințele jobului, fără să inventeze altele.")}</p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <input
@@ -56,13 +56,13 @@ import { useState } from "react";
           }}
           placeholder="Ex: Project Management"
           aria-label={uiText(locale, "Competență nouă")}
-          className="w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3"
+          className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3"
         />
 
         <button
           type="button"
           onClick={addSkill}
-          className="rounded-lg border border-gray-500 px-5 py-3 font-medium hover:bg-gray-800"
+          className="rounded-lg border border-slate-300 px-5 py-3 font-medium hover:bg-orange-50"
         >{uiText(locale, "+ Adaugă")}</button>
       </div>
 
@@ -71,7 +71,7 @@ import { useState } from "react";
           {skills.map((skill) => (
             <span
               key={skill}
-              className="inline-flex items-center gap-2 rounded-full border border-gray-600 px-3 py-2 text-sm"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-3 py-2 text-sm"
             >
               {skill}
 

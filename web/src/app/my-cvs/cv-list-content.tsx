@@ -29,29 +29,29 @@ export default async function MyCVsPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-8 text-white sm:px-6 sm:py-12">
+    <main className="min-h-screen bg-[#fffaf7] px-4 py-8 text-slate-900 sm:px-6 sm:py-12">
       <div className="mx-auto max-w-4xl">
         <Link
           href="/dashboard"
-          className="text-sm text-blue-400 hover:underline"
+          className="text-sm text-[#d8432a] hover:underline"
         >{uiText(locale, "← Înapoi la Dashboard")}</Link>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold sm:text-3xl">{uiText(locale, "CV-urile mele")}</h1>
 
-            <p className="mt-3 text-gray-400">{uiText(locale, "Aici găsești CV-urile originale salvate în contul tău.")}</p>
+            <p className="mt-3 text-slate-500">{uiText(locale, "Aici găsești CV-urile originale salvate în contul tău.")}</p>
           </div>
 
           <Link
             href="/cv"
-            className="inline-block w-full rounded-lg bg-blue-600 px-5 py-3 text-center font-medium sm:w-auto text-white hover:bg-blue-700"
+            className="inline-block w-full rounded-lg bg-[#ef5135] px-5 py-3 text-center font-medium sm:w-auto text-white hover:bg-[#d8432a]"
           >{uiText(locale, "+ Creează CV nou")}</Link>
         </div>
 
         <Link
           href="/generated-cvs"
-          className="mt-6 inline-block text-sm text-blue-400 hover:underline"
+          className="mt-6 inline-block text-sm text-[#d8432a] hover:underline"
         >{uiText(locale, "Vezi CV-urile generate cu AI →")}</Link>
 
         {error ? (
@@ -64,13 +64,13 @@ export default async function MyCVsPage() {
             {cvs.map((cv) => (
               <article
                 key={cv.id}
-                className="rounded-xl border border-gray-700 bg-slate-900 p-4 sm:p-6"
+                className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6"
               >
                 <h2 className="text-lg font-semibold">
                   {cv.title || uiText(locale, "CV fără titlu")}
                 </h2>
 
-                <p className="mt-2 text-sm text-gray-400">
+                <p className="mt-2 text-sm text-slate-500">
                   {uiText(locale, "Creat la:")}{" "}
                   {new Date(cv.created_at).toLocaleDateString(
                     locale === "en" ? "en-GB" : "ro-RO",
@@ -86,24 +86,24 @@ export default async function MyCVsPage() {
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                   <Link
                     href={`/my-cvs/${cv.id}`}
-                    className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium hover:bg-blue-700"
+                    className="rounded-lg bg-[#ef5135] px-4 py-3 text-center text-sm font-medium hover:bg-[#d8432a] text-white"
                   >{uiText(locale, "Vezi CV")}</Link>
 
                   <Link
                     href={`/my-cvs/${cv.id}/edit`}
-                    className="rounded-lg border border-gray-600 px-4 py-3 text-center text-sm font-medium hover:bg-gray-800"
+                    className="rounded-lg border border-slate-300 px-4 py-3 text-center text-sm font-medium hover:bg-orange-50"
                   >{uiText(locale, "Editează")}</Link>
                 </div>
               </article>
             ))}
           </div>
         ) : (
-          <div className="mt-8 rounded-xl border border-gray-700 p-8 text-center">
-            <p className="text-gray-400">{uiText(locale, "Nu ai niciun CV salvat.")}</p>
+          <div className="mt-8 rounded-xl border border-slate-200 bg-white shadow-sm p-8 text-center">
+            <p className="text-slate-500">{uiText(locale, "Nu ai niciun CV salvat.")}</p>
 
             <Link
               href="/cv"
-              className="mt-5 inline-block text-blue-400 hover:underline"
+              className="mt-5 inline-block text-[#d8432a] hover:underline"
             >{uiText(locale, "Creează primul tău CV →")}</Link>
           </div>
         )}
