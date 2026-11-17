@@ -26,9 +26,9 @@ export default function GeneratedCVPage({
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
+        <main className="min-h-screen bg-slate-950 px-4 py-8 text-white sm:px-6 sm:py-12">
           <div className="mx-auto max-w-4xl">
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-2xl font-bold sm:text-3xl">
               CV adaptat cu AI
             </h1>
             <p className="mt-4 text-gray-400">
@@ -178,7 +178,7 @@ async function GeneratedCVContent({
       );
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
+    <main className="min-h-screen bg-slate-950 px-4 py-8 text-white sm:px-6 sm:py-12">
       <div className="mx-auto max-w-4xl">
         <Link
           href="/generated-cvs"
@@ -187,20 +187,20 @@ async function GeneratedCVContent({
           ← {labels.back}
         </Link>
 
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-          <h1 className="text-3xl font-bold">
+        <div className="mt-6 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="text-2xl font-bold sm:text-3xl">
             {labels.title}
           </h1>
 
           <a
             href={`/api/generated-cvs/${generatedCV.id}/pdf`}
-            className="inline-flex items-center rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700"
+            className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 text-center font-semibold text-white hover:bg-blue-700"
           >
             ↓ {labels.download}
           </a>
         </div>
 
-        <section className="mt-8 rounded-xl border border-amber-700 bg-amber-950/20 p-6">
+        <section className="mt-6 rounded-xl border border-amber-700 bg-amber-950/20 p-4 sm:mt-8 sm:p-6">
           <h2 className="font-semibold text-amber-300">
             {labels.review}
           </h2>
@@ -209,12 +209,12 @@ async function GeneratedCVContent({
           </p>
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">
             {labels.contact}
           </h2>
 
-          <div className="mt-4 space-y-2">
+          <div className="mt-4 space-y-2 break-words">
             {fullName && (
               <p className="text-lg font-medium">
                 {fullName}
@@ -226,17 +226,17 @@ async function GeneratedCVContent({
           </div>
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">
             {labels.summary}
           </h2>
-          <p className="mt-4 whitespace-pre-wrap leading-7">
+          <p className="mt-4 whitespace-pre-wrap break-words leading-7">
             {cvContent.professional_summary ||
               labels.empty}
           </p>
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">
             {labels.experience}
           </h2>
@@ -266,7 +266,7 @@ async function GeneratedCVContent({
           )}
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">
             {labels.education}
           </h2>
@@ -293,7 +293,7 @@ async function GeneratedCVContent({
           )}
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">
             {labels.skills}
           </h2>
@@ -316,7 +316,7 @@ async function GeneratedCVContent({
           </div>
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">
             {labels.languages}
           </h2>
@@ -337,7 +337,7 @@ async function GeneratedCVContent({
           )}
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">
             {labels.details}
           </h2>

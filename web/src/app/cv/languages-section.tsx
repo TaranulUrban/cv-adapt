@@ -63,7 +63,7 @@ export default function LanguagesSection({
     "mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3";
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-700 p-6">
+    <section className="mt-6 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
       <h2 className="text-xl font-semibold">{uiText(locale, "Limbi străine")}</h2>
 
       <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă limbile cunoscute și nivelul tău real.")}</p>

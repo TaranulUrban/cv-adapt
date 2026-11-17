@@ -29,7 +29,7 @@ export default async function MyCVsPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
+    <main className="min-h-screen bg-slate-950 px-4 py-8 text-white sm:px-6 sm:py-12">
       <div className="mx-auto max-w-4xl">
         <Link
           href="/dashboard"
@@ -38,14 +38,14 @@ export default async function MyCVsPage() {
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">{uiText(locale, "CV-urile mele")}</h1>
+            <h1 className="text-2xl font-bold sm:text-3xl">{uiText(locale, "CV-urile mele")}</h1>
 
             <p className="mt-3 text-gray-400">{uiText(locale, "Aici găsești CV-urile originale salvate în contul tău.")}</p>
           </div>
 
           <Link
             href="/cv"
-            className="inline-block rounded-lg bg-blue-600 px-5 py-3 font-medium text-white hover:bg-blue-700"
+            className="inline-block w-full rounded-lg bg-blue-600 px-5 py-3 text-center font-medium sm:w-auto text-white hover:bg-blue-700"
           >{uiText(locale, "+ Creează CV nou")}</Link>
         </div>
 
@@ -64,7 +64,7 @@ export default async function MyCVsPage() {
             {cvs.map((cv) => (
               <article
                 key={cv.id}
-                className="rounded-xl border border-gray-700 bg-slate-900 p-6"
+                className="rounded-xl border border-gray-700 bg-slate-900 p-4 sm:p-6"
               >
                 <h2 className="text-lg font-semibold">
                   {cv.title || uiText(locale, "CV fără titlu")}
@@ -83,15 +83,15 @@ export default async function MyCVsPage() {
                   )}
                 </p>
 
-                <div className="mt-5 flex flex-wrap gap-3">
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                   <Link
                     href={`/my-cvs/${cv.id}`}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium hover:bg-blue-700"
+                    className="rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium hover:bg-blue-700"
                   >{uiText(locale, "Vezi CV")}</Link>
 
                   <Link
                     href={`/my-cvs/${cv.id}/edit`}
-                    className="rounded-lg border border-gray-600 px-4 py-2 text-sm font-medium hover:bg-gray-800"
+                    className="rounded-lg border border-gray-600 px-4 py-3 text-center text-sm font-medium hover:bg-gray-800"
                   >{uiText(locale, "Editează")}</Link>
                 </div>
               </article>

@@ -63,53 +63,53 @@ async function HomeContent() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-6">
+      <header className="mx-auto flex max-w-6xl flex-col items-stretch gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-6">
         <Link href="/" className="text-2xl font-bold tracking-tight text-blue-700">
           CV Adapt
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-3">
+        <nav className="flex flex-wrap items-center justify-between gap-2 sm:justify-end sm:gap-3">
           <LanguageSwitcher locale={locale} />
-          <Link href="/login" className="rounded-lg px-4 py-2 font-medium hover:bg-slate-200">
+          <Link href="/login" className="rounded-lg px-3 py-3 text-center text-sm font-medium sm:px-4 sm:text-base hover:bg-slate-200">
             {t.login}
           </Link>
-          <Link href="/register" className="rounded-lg bg-blue-700 px-5 py-2 font-medium text-white hover:bg-blue-800">
+          <Link href="/register" className="rounded-lg bg-blue-700 px-4 py-3 text-center text-sm font-medium sm:px-5 sm:text-base text-white hover:bg-blue-800">
             {t.register}
           </Link>
         </nav>
       </header>
 
-      <section className="mx-auto flex max-w-4xl flex-col items-center px-6 py-28 text-center">
-        <span className="mb-6 rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
+      <section className="mx-auto flex max-w-4xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-28">
+        <span className="mb-6 rounded-full bg-blue-100 px-3 py-2 text-xs sm:px-4 sm:text-sm font-medium text-blue-700">
           {t.badge}
         </span>
 
-        <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
+        <h1 className="text-3xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
           {t.title}
         </h1>
 
-        <p className="mt-8 max-w-2xl text-lg leading-8 text-slate-600">
+        <p className="mt-6 max-w-2xl text-base leading-7 sm:mt-8 sm:text-lg sm:leading-8 text-slate-600">
           {t.description}
         </p>
 
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <Link href="/register" className="rounded-xl bg-blue-700 px-8 py-4 font-semibold text-white hover:bg-blue-800">
+        <div className="mt-8 flex w-full flex-col justify-center gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:gap-4">
+          <Link href="/register" className="rounded-xl bg-blue-700 px-6 py-4 text-center font-semibold sm:px-8 text-white hover:bg-blue-800">
             {t.create}
           </Link>
-          <a href="#cum-functioneaza" className="rounded-xl border border-slate-300 px-8 py-4 font-semibold hover:bg-white">
+          <a href="#cum-functioneaza" className="rounded-xl border border-slate-300 px-6 py-4 text-center font-semibold sm:px-8 hover:bg-white">
             {t.how}
           </a>
         </div>
       </section>
 
-      <section id="cum-functioneaza" className="mx-auto max-w-6xl px-6 py-20">
-        <h2 className="mb-10 text-center text-3xl font-bold">
+      <section id="cum-functioneaza" className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-20">
+        <h2 className="mb-8 text-center text-2xl font-bold sm:mb-10 sm:text-3xl">
           {t.howTitle}
         </h2>
 
         <div className="grid gap-6 md:grid-cols-3">
           {t.steps.map(([title, description], index) => (
-            <div key={title} className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+            <div key={title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
               <div className="mb-5 text-2xl font-bold text-blue-700">
                 {String(index + 1).padStart(2, "0")}
               </div>

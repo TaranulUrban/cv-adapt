@@ -14,9 +14,9 @@ export default function AdminPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen bg-slate-50 p-6 text-slate-900">
+        <main className="min-h-screen bg-slate-50 px-4 py-5 text-slate-900 sm:p-6">
           <div className="mx-auto max-w-5xl">
-            <h1 className="text-2xl font-bold text-blue-700">
+            <h1 className="text-xl font-bold text-blue-700 sm:text-2xl">
               CV Adapt — Admin
             </h1>
             <p className="mt-6 text-slate-600">
@@ -67,25 +67,25 @@ async function AdminContent() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 text-slate-900">
+    <main className="min-h-screen bg-slate-50 px-4 py-5 text-slate-900 sm:p-6">
       <div className="mx-auto max-w-5xl">
-        <header className="flex items-center justify-between border-b border-slate-200 py-6">
-          <h1 className="text-2xl font-bold text-blue-700">
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 py-6">
+          <h1 className="text-xl font-bold text-blue-700 sm:text-2xl">
             CV Adapt — Admin
           </h1>
 
           <Link
             href="/dashboard"
-            className="font-medium text-blue-700 hover:underline"
+            className="text-sm font-medium text-blue-700 hover:underline sm:text-base"
           >{uiText(locale, "Înapoi la Dashboard")}</Link>
         </header>
 
-        <section className="py-12">
-          <h2 className="text-3xl font-bold">{uiText(locale, "Panou de administrare")}</h2>
+        <section className="py-8 sm:py-12">
+          <h2 className="text-2xl font-bold sm:text-3xl">{uiText(locale, "Panou de administrare")}</h2>
 
           <p className="mt-3 text-slate-600">{uiText(locale, "Bine ai venit! Ai acces la această pagină deoarece contul tău are rolul Admin.")}</p>
 
-          <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
             <h3 className="text-xl font-semibold">{uiText(locale, "Administrarea utilizatorilor")}</h3>
 
             <p className="mt-3 text-slate-600">
@@ -93,7 +93,7 @@ async function AdminContent() {
             </p>
 
             <div className="mt-6 overflow-x-auto">
-              <table className="w-full text-left text-sm">
+              <table className="min-w-[580px] w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200">
                     <th className="px-3 py-3">{uiText(locale, "ID utilizator")}</th>

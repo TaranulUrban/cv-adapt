@@ -32,7 +32,7 @@ export default function JobSection({
 
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-700 p-6">
+    <section className="mt-6 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
       <h2 className="text-xl font-semibold">{uiText(locale, "Jobul pentru care aplici")}</h2>
 
       <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Introdu linkul anunțului sau copiază descrierea postului. AI-ul va folosi cerințele jobului pentru a adapta CV-ul, fără să inventeze experiență sau competențe.")}</p>
@@ -46,7 +46,7 @@ export default function JobSection({
           value={jobUrl}
           onChange={(event) => updateJob("jobUrl", event.target.value)}
           placeholder="https://www.linkedin.com/jobs/view/..."
-          className="mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3"
+          className="mt-2 block w-full min-w-0 rounded-lg border border-gray-600 bg-transparent px-3 py-3 text-base sm:px-4"
         />
 
         <p className="mt-2 text-xs text-gray-400">{uiText(locale, "Un link poate necesita autentificare sau poate bloca accesul automat. Descrierea copiată este varianta cea mai sigură.")}</p>
@@ -61,7 +61,7 @@ export default function JobSection({
           value={jobDescription}
           onChange={(event) => updateJob("jobDescription", event.target.value)}
           placeholder={uiText(locale, "Copiază aici responsabilitățile și cerințele postului...")}
-          className="mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3"
+          className="mt-2 block w-full min-w-0 rounded-lg border border-gray-600 bg-transparent px-3 py-3 text-base sm:px-4"
         />
       </div>
 
@@ -72,7 +72,7 @@ export default function JobSection({
           id="cvLanguage"
           value={cvLanguage}
           onChange={(event) => updateJob("cvLanguage", event.target.value)}
-          className="mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3"
+          className="mt-2 block w-full min-w-0 rounded-lg border border-gray-600 bg-transparent px-3 py-3 text-base sm:px-4"
         >
           <option value="ro" className="bg-gray-900">{uiText(locale, "Română")}</option>
           <option value="en" className="bg-gray-900">{uiText(locale, "Engleză")}</option>

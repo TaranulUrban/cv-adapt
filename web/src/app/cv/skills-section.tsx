@@ -38,7 +38,7 @@ import { useState } from "react";
   }
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-700 p-6">
+    <section className="mt-6 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
       <h2 className="text-xl font-semibold">{uiText(locale, "Competențe profesionale")}</h2>
 
       <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă doar competențele pe care le deții. AI-ul le va putea evidenția în funcție de cerințele jobului, fără să inventeze altele.")}</p>
