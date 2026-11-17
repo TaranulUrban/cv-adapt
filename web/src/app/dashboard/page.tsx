@@ -80,7 +80,7 @@ export default function DashboardPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen bg-slate-50 p-6 text-slate-900">
+        <main className="min-h-screen bg-slate-50 px-4 py-5 text-slate-900 sm:p-6">
           <div className="mx-auto max-w-5xl">
             <h1 className="text-2xl font-bold text-blue-700">
               CV Adapt
@@ -124,9 +124,9 @@ async function DashboardContent() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 text-slate-900">
+    <main className="min-h-screen bg-slate-50 px-4 py-5 text-slate-900 sm:p-6">
       <div className="mx-auto max-w-5xl">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 py-6">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 py-4 sm:py-6">
           <Link
             href="/dashboard"
             className="text-2xl font-bold text-blue-700"
@@ -137,10 +137,10 @@ async function DashboardContent() {
           <LogoutButton />
         </header>
 
-        <section className="py-12">
-          <h1 className="text-3xl font-bold">{t.welcome}</h1>
+        <section className="py-8 sm:py-12">
+          <h1 className="text-2xl font-bold sm:text-3xl">{t.welcome}</h1>
 
-          <p className="mt-4 text-slate-600">
+          <p className="mt-4 break-words text-slate-600">
             {t.signedIn} {user.email}
           </p>
 
@@ -158,11 +158,11 @@ async function DashboardContent() {
             </Link>
           )}
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3 lg:gap-6">
             {t.cards.map((item) => (
               <section
                 key={item.href}
-                className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
               >
                 <h2 className="text-xl font-semibold">
                   {item.title}
@@ -182,7 +182,7 @@ async function DashboardContent() {
             ))}
           </div>
 
-          <div className="mt-10 rounded-xl border border-blue-200 bg-blue-50 p-5">
+          <div className="mt-8 rounded-xl border border-blue-200 bg-blue-50 p-4 sm:mt-10 sm:p-5">
             <h2 className="font-semibold text-blue-900">
               {t.howTitle}
             </h2>

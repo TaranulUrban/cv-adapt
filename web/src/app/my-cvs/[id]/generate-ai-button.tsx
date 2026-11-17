@@ -70,12 +70,12 @@ export default function GenerateAIButton({
   }
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 w-full sm:w-auto">
       <button
         type="button"
         onClick={handleGenerate}
         disabled={isGenerating}
-        className="rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-lg bg-emerald-600 px-5 py-3 font-semibold sm:w-auto text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isGenerating
           ? uiText(locale, "Se generează CV-ul...")

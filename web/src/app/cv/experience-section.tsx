@@ -63,10 +63,10 @@ export default function ExperienceSection({
   }
 
   const inputClass =
-    "mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3";
+    "mt-2 block w-full min-w-0 rounded-lg border border-gray-600 bg-transparent px-3 py-3 text-base sm:px-4";
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-700 p-6">
+    <section className="mt-6 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
       <h2 className="text-xl font-semibold">{uiText(locale, "Experiență profesională")}</h2>
 
       <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă experiențele tale profesionale. Dacă nu ai experiență, poți lăsa secțiunea goală.")}</p>
@@ -222,7 +222,7 @@ export default function ExperienceSection({
       <button
         type="button"
         onClick={addExperience}
-        className="mt-6 rounded-lg border border-gray-500 px-5 py-3 font-medium hover:bg-gray-800"
+        className="mt-6 w-full rounded-lg border border-gray-500 px-5 py-3 font-medium sm:w-auto hover:bg-gray-800"
       >{uiText(locale, "+ Adaugă experiență")}</button>
     </section>
   );

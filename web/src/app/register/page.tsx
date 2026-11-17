@@ -90,8 +90,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6 text-slate-900">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-md">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-8 text-slate-900 sm:p-6">
+      <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-md sm:p-8">
         <Link href="/" className="text-2xl font-bold text-blue-700">
           CV Adapt
         </Link>

@@ -61,10 +61,10 @@ export default function EducationSection({
   }
 
   const inputClass =
-    "mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3";
+    "mt-2 block w-full min-w-0 rounded-lg border border-gray-600 bg-transparent px-3 py-3 text-base sm:px-4";
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-700 p-6">
+    <section className="mt-6 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
       <h2 className="text-xl font-semibold">{uiText(locale, "Educație și studii")}</h2>
 
       <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă studiile relevante pentru CV-ul tău.")}</p>

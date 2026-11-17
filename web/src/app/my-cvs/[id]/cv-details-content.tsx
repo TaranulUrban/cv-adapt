@@ -102,7 +102,7 @@ export default async function CVDetailsPage({
   const canGenerate = hasValidJobDescription && hasValidLanguage;
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-12 text-white">
+    <main className="min-h-screen bg-slate-950 px-4 py-8 text-white sm:px-6 sm:py-12">
       <div className="mx-auto max-w-4xl">
         <Link
           href="/my-cvs"
@@ -120,7 +120,7 @@ export default async function CVDetailsPage({
 
           <Link
             href={`/my-cvs/${cv.id}/edit`}
-            className="rounded-lg border border-gray-600 px-5 py-3 font-medium hover:bg-gray-800"
+            className="rounded-lg border border-gray-600 px-5 py-3 text-center font-medium hover:bg-gray-800"
           >{uiText(locale, "Editează CV")}</Link>
         </div>
 
@@ -143,7 +143,7 @@ export default async function CVDetailsPage({
           )}
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">{uiText(locale, "Date personale")}</h2>
 
           <div className="mt-4 space-y-2">
@@ -156,7 +156,7 @@ export default async function CVDetailsPage({
           </div>
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">{uiText(locale, "Experiență profesională")}</h2>
 
           {experiences.length === 0 ? (
@@ -188,7 +188,7 @@ export default async function CVDetailsPage({
           )}
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">{uiText(locale, "Educație și studii")}</h2>
 
           {education.length === 0 ? (
@@ -216,7 +216,7 @@ export default async function CVDetailsPage({
           )}
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">{uiText(locale, "Competențe profesionale")}</h2>
 
           <div className="mt-4 flex flex-wrap gap-2">
@@ -235,7 +235,7 @@ export default async function CVDetailsPage({
           </div>
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">{uiText(locale, "Limbi străine")}</h2>
 
           {languages.length === 0 ? (
@@ -252,7 +252,7 @@ export default async function CVDetailsPage({
           )}
         </section>
 
-        <section className="mt-8 rounded-xl border border-gray-700 p-6">
+        <section className="mt-6 min-w-0 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
           <h2 className="text-xl font-semibold">{uiText(locale, "Jobul pentru care aplici")}</h2>
 
           <p className="mt-4">
@@ -279,15 +279,15 @@ export default async function CVDetailsPage({
           )}
         </section>
 
-        <div className="mt-10 flex flex-wrap gap-4">
+        <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:gap-4">
           <Link
             href={`/my-cvs/${cv.id}/edit`}
-            className="rounded-lg border border-gray-600 px-5 py-3 font-medium hover:bg-gray-800"
+            className="rounded-lg border border-gray-600 px-5 py-3 text-center font-medium hover:bg-gray-800"
           >{uiText(locale, "Editează CV")}</Link>
 
           <Link
             href="/generated-cvs"
-            className="rounded-lg border border-gray-600 px-5 py-3 font-medium hover:bg-gray-800"
+            className="rounded-lg border border-gray-600 px-5 py-3 text-center font-medium hover:bg-gray-800"
           >{uiText(locale, "CV-uri generate cu AI")}</Link>
         </div>
       </div>
