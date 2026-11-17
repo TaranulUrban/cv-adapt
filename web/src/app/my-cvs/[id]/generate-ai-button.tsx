@@ -95,7 +95,7 @@ export default function GenerateAIButton({
         </p>
       )}
 
-      <p className="mt-3 text-xs text-gray-400">{uiText(locale, "Maximum 5 generări pe zi, inclusiv încercările eșuate. Generarea poate consuma credit API.")}</p>
+      <p className="mt-3 text-xs text-gray-400">{uiText(locale, "Maximum 20 generări pe zi, inclusiv încercările eșuate. Generarea poate consuma credit API.")}</p>
     </div>
   );
 }

@@ -249,7 +249,7 @@ try {
     error.message === "AI_DAILY_LIMIT_REACHED"
   ) {
     return NextResponse.json(
-      { error: "Ai atins limita de 5 generări AI pentru astăzi." },
+      { error: "Ai atins limita de 20 generări AI pentru astăzi." },
       { status: 429 }
     );
   }
