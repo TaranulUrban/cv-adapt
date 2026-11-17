@@ -60,18 +60,18 @@ export default function LanguagesSection({
   }
 
   const inputClass =
-    "mt-2 w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3";
+    "mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3";
 
   return (
-    <section className="mt-6 rounded-xl border border-gray-700 p-4 sm:mt-8 sm:p-6">
+    <section className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:mt-8 sm:p-6">
       <h2 className="text-xl font-semibold">{uiText(locale, "Limbi străine")}</h2>
 
-      <p className="mt-2 text-sm text-gray-400">{uiText(locale, "Adaugă limbile cunoscute și nivelul tău real.")}</p>
+      <p className="mt-2 text-sm text-slate-500">{uiText(locale, "Adaugă limbile cunoscute și nivelul tău real.")}</p>
 
       {value.map((language, index) => (
         <div
           key={language.id}
-          className="mt-6 border-t border-gray-700 pt-6"
+          className="mt-6 border-t border-slate-200 pt-6"
         >
           <div className="flex items-center justify-between gap-4">
             <h3 className="font-semibold">
@@ -142,7 +142,7 @@ export default function LanguagesSection({
       <button
         type="button"
         onClick={addLanguage}
-        className="mt-6 rounded-lg border border-gray-500 px-5 py-3 font-medium hover:bg-gray-800"
+        className="mt-6 rounded-lg border border-slate-300 px-5 py-3 font-medium hover:bg-orange-50"
       >{uiText(locale, "+ Adaugă limbă")}</button>
     </section>
   );

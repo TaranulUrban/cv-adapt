@@ -14,9 +14,9 @@ export default function AdminPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen bg-slate-50 px-4 py-5 text-slate-900 sm:p-6">
+        <main className="min-h-screen bg-[#fffaf7] px-4 py-5 text-slate-900 sm:p-6">
           <div className="mx-auto max-w-5xl">
-            <h1 className="text-xl font-bold text-blue-700 sm:text-2xl">
+            <h1 className="text-xl font-bold text-[#d8432a] sm:text-2xl">
               CV Adapt — Admin
             </h1>
             <p className="mt-6 text-slate-600">
@@ -67,16 +67,16 @@ async function AdminContent() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-5 text-slate-900 sm:p-6">
+    <main className="min-h-screen bg-[#fffaf7] px-4 py-5 text-slate-900 sm:p-6">
       <div className="mx-auto max-w-5xl">
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 py-6">
-          <h1 className="text-xl font-bold text-blue-700 sm:text-2xl">
+          <h1 className="text-xl font-bold text-[#d8432a] sm:text-2xl">
             CV Adapt — Admin
           </h1>
 
           <Link
             href="/dashboard"
-            className="text-sm font-medium text-blue-700 hover:underline sm:text-base"
+            className="text-sm font-medium text-[#d8432a] hover:underline sm:text-base"
           >{uiText(locale, "Înapoi la Dashboard")}</Link>
         </header>
 

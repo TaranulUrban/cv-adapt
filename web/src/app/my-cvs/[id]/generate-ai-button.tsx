@@ -75,7 +75,7 @@ export default function GenerateAIButton({
         type="button"
         onClick={handleGenerate}
         disabled={isGenerating}
-        className="w-full rounded-lg bg-emerald-600 px-5 py-3 font-semibold sm:w-auto text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-lg bg-[#ef5135] px-5 py-3 font-semibold sm:w-auto text-white hover:bg-[#d8432a] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isGenerating
           ? uiText(locale, "Se generează CV-ul...")
@@ -83,7 +83,7 @@ export default function GenerateAIButton({
       </button>
 
       {isGenerating && (
-        <p role="status" className="mt-3 text-sm text-gray-400">{uiText(locale, "GPT-5 mini adaptează CV-ul pentru jobul ales. Te rugăm să aștepți și să nu închizi pagina.")}</p>
+        <p role="status" className="mt-3 text-sm text-slate-500">{uiText(locale, "GPT-5 mini adaptează CV-ul pentru jobul ales. Te rugăm să aștepți și să nu închizi pagina.")}</p>
       )}
 
       {errorMessage && (
@@ -95,7 +95,7 @@ export default function GenerateAIButton({
         </p>
       )}
 
-      <p className="mt-3 text-xs text-gray-400">{uiText(locale, "Maximum 20 generări pe zi, inclusiv încercările eșuate. Generarea poate consuma credit API.")}</p>
+      <p className="mt-3 text-xs text-slate-500">{uiText(locale, "Maximum 20 generări pe zi, inclusiv încercările eșuate. Generarea poate consuma credit API.")}</p>
     </div>
   );
 }

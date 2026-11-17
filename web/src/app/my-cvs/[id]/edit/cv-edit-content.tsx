@@ -43,17 +43,19 @@ export default async function EditCVPage({
   }
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-12">
+    <main className="min-h-screen bg-[#fffaf7] px-4 py-8 text-slate-900 sm:px-6 sm:py-12">
+      <div className="mx-auto max-w-4xl">
       <Link
         href={`/my-cvs/${id}`}
-        className="text-sm text-blue-400 hover:underline"
+        className="text-sm text-[#d8432a] hover:underline"
       >{uiText(locale, "← Înapoi la CV")}</Link>
 
       <h1 className="mt-6 text-3xl font-bold">{uiText(locale, "Editează CV-ul")}</h1>
 
-      <p className="mt-3 text-gray-400">{uiText(locale, "Modifică informațiile din CV-ul tău.")}</p>
+      <p className="mt-3 text-slate-500">{uiText(locale, "Modifică informațiile din CV-ul tău.")}</p>
 
       <CVForm initialData={cv as SavedCV} />
+      </div>
     </main>
   );
 }

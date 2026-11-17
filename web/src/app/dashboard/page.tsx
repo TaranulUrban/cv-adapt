@@ -80,9 +80,9 @@ export default function DashboardPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-screen bg-slate-50 px-4 py-5 text-slate-900 sm:p-6">
+        <main className="min-h-screen bg-[#fffaf7] px-4 py-5 text-slate-900 sm:p-6">
           <div className="mx-auto max-w-5xl">
-            <h1 className="text-2xl font-bold text-blue-700">
+            <h1 className="text-2xl font-bold text-[#d8432a]">
               CV Adapt
             </h1>
           </div>
@@ -124,18 +124,11 @@ async function DashboardContent() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-5 text-slate-900 sm:p-6">
+    <main className="min-h-screen bg-[#fffaf7] px-4 py-5 text-slate-900 sm:p-6">
       <div className="mx-auto max-w-5xl">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 py-4 sm:py-6">
-          <Link
-            href="/dashboard"
-            className="text-2xl font-bold text-blue-700"
-          >
-            CV Adapt
-          </Link>
-
+        <div className="flex justify-end border-b border-slate-200 py-4">
           <LogoutButton />
-        </header>
+        </div>
 
         <section className="py-8 sm:py-12">
           <h1 className="text-2xl font-bold sm:text-3xl">{t.welcome}</h1>
@@ -152,7 +145,7 @@ async function DashboardContent() {
           {profile.role === "admin" && (
             <Link
               href="/admin"
-              className="mt-4 inline-block text-sm font-semibold text-blue-700 hover:underline"
+              className="mt-4 inline-block text-sm font-semibold text-[#d8432a] hover:underline"
             >
               {t.admin}
             </Link>
@@ -174,7 +167,7 @@ async function DashboardContent() {
 
                 <Link
                   href={item.href}
-                  className="mt-6 inline-block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-blue-700"
+                  className="mt-6 inline-block rounded-lg bg-[#ef5135] px-4 py-3 text-center text-sm font-semibold text-white hover:bg-[#d8432a]"
                 >
                   {item.label}
                 </Link>
@@ -182,12 +175,12 @@ async function DashboardContent() {
             ))}
           </div>
 
-          <div className="mt-8 rounded-xl border border-blue-200 bg-blue-50 p-4 sm:mt-10 sm:p-5">
-            <h2 className="font-semibold text-blue-900">
+          <div className="mt-8 rounded-xl border border-orange-200 bg-orange-50 p-4 sm:mt-10 sm:p-5">
+            <h2 className="font-semibold text-[#8e3829]">
               {t.howTitle}
             </h2>
 
-            <p className="mt-2 text-sm leading-6 text-blue-900">
+            <p className="mt-2 text-sm leading-6 text-[#8e3829]">
               {t.howDescription}
             </p>
           </div>

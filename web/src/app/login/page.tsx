@@ -69,13 +69,9 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-8 text-slate-900 sm:p-6">
+    <main className="flex min-h-screen items-center justify-center bg-[#fffaf7] px-4 py-8 text-slate-900 sm:p-6">
       <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-md sm:p-8">
-        <Link href="/" className="text-2xl font-bold text-blue-700">
-          CV Adapt
-        </Link>
-
-        <h1 className="mt-8 text-3xl font-bold">
+        <h1 className="text-3xl font-bold">
           {t.title}
         </h1>
 
@@ -118,7 +114,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-blue-700 p-3 font-semibold text-white hover:bg-blue-800 disabled:opacity-50"
+            className="w-full rounded-lg bg-[#ef5135] p-3 font-semibold text-white hover:bg-[#d8432a] disabled:opacity-50"
           >
             {loading ? t.loading : t.submit}
           </button>
@@ -132,7 +128,7 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-slate-600">
           {t.noAccount}{" "}
-          <Link href="/register" className="font-semibold text-blue-700">
+          <Link href="/register" className="font-semibold text-[#d8432a]">
             {t.register}
           </Link>
         </p>
