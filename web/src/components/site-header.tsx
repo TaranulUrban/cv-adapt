@@ -36,6 +36,7 @@ export default function SiteHeader() {
         { href: "/cv", label: en ? "Create CV" : "Creează CV" },
         { href: "/my-cvs", label: en ? "My CVs" : "CV-urile mele" },
         { href: "/generated-cvs", label: en ? "AI-generated CVs" : "CV-uri cu AI" },
+        { href: "/generated-cvs/new", label: en ? "Generate with AI" : "Generează cu AI" },
       ]
     : [
         { href: "/#cum-functioneaza", label: en ? "How it works" : "Cum funcționează" },

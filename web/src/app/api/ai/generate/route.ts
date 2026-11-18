@@ -6,6 +6,7 @@ import { assertGeneratedCVIsValid } from "@/lib/ai/verify-generated-cv";
 import { originalCVSchema } from "@/lib/ai/original-cv-validation";
 import { calculateAIUsage } from "@/lib/ai/usage-cost";
 import { protectGeneratedCV } from "@/lib/ai/protect-generated-cv";
+import { getServerLocale } from "@/lib/i18n/server";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -46,6 +47,17 @@ export async function POST(request: Request) {
     );
   }
 
+  const jobTitle = "jobTitle" in body ? body.jobTitle : undefined;
+  const jobDescriptionInput = "jobDescription" in body ? body.jobDescription : undefined;
+
+  if (typeof jobTitle !== "string" || !jobTitle.trim() || jobTitle.trim().length > 160) {
+    return NextResponse.json({ error: "Titlul jobului este obligatoriu (maximum 160 de caractere)." }, { status: 400 });
+  }
+
+  if (typeof jobDescriptionInput !== "string" || jobDescriptionInput.trim().length < 50 || jobDescriptionInput.length > 15000) {
+    return NextResponse.json({ error: "Descrierea jobului trebuie să aibă între 50 și 15.000 de caractere." }, { status: 400 });
+  }
+
   const { data: cv, error: cvError } = await supabase
     .from("cvs")
     .select("id, experiences, education, skills, languages, job_info")
@@ -67,45 +79,11 @@ export async function POST(request: Request) {
     );
   }
 
-    const jobInfo = cv.job_info as {
-    jobDescription?: unknown;
-    cvLanguage?: unknown;
-  } | null;
-
-  const jobDescription = jobInfo?.jobDescription;
-
-  if (
-    typeof jobDescription !== "string" ||
-    jobDescription.trim().length < 50
-  ) {
-    return NextResponse.json(
-      {
-        error:
-          "Descrierea jobului trebuie să conțină minimum 50 de caractere.",
-      },
-      { status: 400 }
-    );
-  }
-
-  if (jobDescription.length > 15000) {
-    return NextResponse.json(
-      {
-        error:
-          "Descrierea jobului este prea lungă (maximum 15.000 de caractere).",
-      },
-      { status: 400 }
-    );
-  }
-
-  if (
-    jobInfo?.cvLanguage !== "ro" &&
-    jobInfo?.cvLanguage !== "en"
-  ) {
-    return NextResponse.json(
-      { error: "Limba CV-ului trebuie să fie română sau engleză." },
-      { status: 400 }
-    );
-  }
+  const jobInfo = cv.job_info as { cvLanguage?: unknown } | null;
+  const cvLanguage = jobInfo?.cvLanguage === "en" || jobInfo?.cvLanguage === "ro"
+    ? jobInfo.cvLanguage
+    : await getServerLocale();
+  const jobDescription = `Job title: ${jobTitle.trim()}\n\n${jobDescriptionInput.trim()}`;
 
   const verifiedCvId = cv.id;
   const verifiedUserId = user.id;
@@ -276,7 +254,7 @@ try {
   const result = await generateAdaptedCV(
     cvForAI,
     jobDescription,
-    jobInfo.cvLanguage
+    cvLanguage
   );
 
   const protectedCV = protectGeneratedCV(cvForAI, result.content);
@@ -290,7 +268,7 @@ try {
     requestId,
     result.content,
     jobDescription,
-    jobInfo.cvLanguage,
+    cvLanguage,
     {
       model: result.model,
       ...usage,

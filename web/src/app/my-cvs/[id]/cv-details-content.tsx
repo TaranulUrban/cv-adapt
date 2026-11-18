@@ -5,7 +5,6 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import GenerateAIButton from "./generate-ai-button";
 
 
 type Experience = {
@@ -41,12 +40,6 @@ type PersonalInfo = {
   city?: string;
 };
 
-type JobInfo = {
-  jobUrl?: string;
-  jobDescription?: string;
-  cvLanguage?: string;
-};
-
 export default async function CVDetailsPage({
   params,
 }: {
@@ -70,7 +63,7 @@ export default async function CVDetailsPage({
   const { data: cv, error } = await supabase
     .from("cvs")
     .select(
-      "id, title, personal_info, experiences, education, skills, languages, job_info"
+      "id, title, personal_info, experiences, education, skills, languages"
     )
     .eq("id", id)
     .eq("user_id", user.id)
@@ -89,17 +82,6 @@ export default async function CVDetailsPage({
   const education = (cv.education ?? []) as Education[];
   const skills = (cv.skills ?? []) as string[];
   const languages = (cv.languages ?? []) as Language[];
-  const job = (cv.job_info ?? {}) as JobInfo;
-
-  const hasValidJobDescription =
-    typeof job.jobDescription === "string" &&
-    job.jobDescription.trim().length >= 50 &&
-    job.jobDescription.length <= 15000;
-
-  const hasValidLanguage =
-    job.cvLanguage === "ro" || job.cvLanguage === "en";
-
-  const canGenerate = hasValidJobDescription && hasValidLanguage;
 
   return (
     <main className="min-h-screen bg-[#fffaf7] px-4 py-8 text-slate-900 sm:px-6 sm:py-12">
@@ -129,18 +111,10 @@ export default async function CVDetailsPage({
 
           <p className="mt-3 text-sm leading-6 text-slate-600">{uiText(locale, "GPT-5 mini va adapta descrierile profesionale pentru jobul ales, păstrând informațiile originale.")}</p>
 
-          {canGenerate ? (
-            <GenerateAIButton cvId={cv.id} />
-          ) : (
-            <div className="mt-5">
-              <p className="text-sm text-amber-800">{uiText(locale, "Pentru generare ai nevoie de o descriere a jobului de minimum 50 de caractere și de limba CV-ului (română sau engleză).")}</p>
-
-              <Link
-                href={`/my-cvs/${cv.id}/edit`}
-                className="mt-4 inline-block rounded-lg bg-[#ef5135] px-4 py-3 text-sm font-medium hover:bg-[#d8432a] text-white"
-              >{uiText(locale, "Completează informațiile")}</Link>
-            </div>
-          )}
+          <Link
+            href={`/generated-cvs/new?cvId=${cv.id}`}
+            className="mt-5 inline-block rounded-lg bg-[#ef5135] px-4 py-3 text-sm font-medium text-white hover:bg-[#d8432a]"
+          >{uiText(locale, "Generează CV cu AI")}</Link>
         </section>
 
         <section className="mt-6 min-w-0 rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:mt-8 sm:p-6">
@@ -249,33 +223,6 @@ export default async function CVDetailsPage({
                 {language.name} — {language.level}
               </p>
             ))
-          )}
-        </section>
-
-        <section className="mt-6 min-w-0 rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:mt-8 sm:p-6">
-          <h2 className="text-xl font-semibold">{uiText(locale, "Jobul pentru care aplici")}</h2>
-
-          <p className="mt-4">
-            {uiText(locale, "Limba CV-ului")}:{" "}
-            {job.cvLanguage === "en"
-              ? uiText(locale, "Engleză")
-              : job.cvLanguage === "ro"
-                ? uiText(locale, "Română")
-                : uiText(locale, "Neselectată")}
-          </p>
-
-          {job.jobUrl && (
-            <p className="mt-3 break-all text-[#d8432a]">
-              {job.jobUrl}
-            </p>
-          )}
-
-          {job.jobDescription ? (
-            <p className="mt-3 whitespace-pre-wrap leading-7">
-              {job.jobDescription}
-            </p>
-          ) : (
-            <p className="mt-3 text-slate-500">{uiText(locale, "Nu ai adăugat o descriere de job.")}</p>
           )}
         </section>
 

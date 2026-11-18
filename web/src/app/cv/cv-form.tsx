@@ -19,7 +19,6 @@ import LanguagesSection, {
   type Language,
 } from "./languages-section";
 
-import JobSection, { type JobData } from "./job-section";
 
 import { saveCV, updateCV } from "./save-cv";
 import type { SavedCV } from "./save-cv";
@@ -69,14 +68,6 @@ export default function CVForm({ initialData }: CVFormProps) {
     normalizeIds(initialData?.languages ?? [])
   );
 
-  const [job, setJob] = useState<JobData>(
-    initialData?.job_info ?? {
-      jobUrl: "",
-      jobDescription: "",
-      cvLanguage: "ro",
-    }
-  );
-
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [savedCvId, setSavedCvId] = useState<string | null>(null);
@@ -117,7 +108,7 @@ export default function CVForm({ initialData }: CVFormProps) {
         languages: languages.map((item) => ({
           ...item,
         })),
-        job_info: job,
+        job_info: { jobUrl: "", jobDescription: "", cvLanguage: "ro" as const },
       };
 
       const id = initialData
@@ -263,11 +254,6 @@ export default function CVForm({ initialData }: CVFormProps) {
       <LanguagesSection
         value={languages}
         onChange={setLanguages}
-      />
-
-      <JobSection
-        value={job}
-        onChange={setJob}
       />
 
       <div className="mt-8 flex flex-col gap-4">

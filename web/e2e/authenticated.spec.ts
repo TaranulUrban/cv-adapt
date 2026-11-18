@@ -42,7 +42,16 @@ test("admin can open new CV form without saving", async ({ page }) => {
   await page.goto(`${base}/cv`);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.locator('input[type="email"]')).toBeVisible();
+});
+
+test("admin can open separate AI generation form", async ({ page }) => {
+  test.skip(process.env.TEST_NEW_AI_FLOW !== "1", "Enable against a deployment containing the new AI generation page");
+  await login(page);
+  await page.goto(`${base}/generated-cvs/new`);
+  await expect(page.locator("#originalCv")).toBeVisible();
+  await expect(page.locator("#jobTitle")).toBeVisible();
   await expect(page.locator("#jobDescription")).toBeVisible();
+  // Never submit: real AI generation may incur costs.
 });
 
 test("admin can view existing original CV without editing", async ({ page }) => {
