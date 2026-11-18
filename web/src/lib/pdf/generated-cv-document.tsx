@@ -86,62 +86,83 @@ Font.registerHyphenationCallback((word) => [word]);
 const styles = StyleSheet.create({
   page: {
     fontFamily: "Noto Sans",
-    fontSize: 9,
-    color: "#202a35",
-    paddingTop: 30,
-    paddingBottom: 30,
-    paddingHorizontal: 40,
-    lineHeight: 1.35,
+    fontSize: 9.5,
+    color: "#263747",
+    paddingTop: 42,
+    paddingBottom: 48,
+    paddingHorizontal: 46,
+    lineHeight: 1.45,
   },
   header: {
-    marginBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#cbd5e1",
-    paddingBottom: 8,
+    marginBottom: 19,
+    borderBottomWidth: 1.3,
+    borderBottomColor: "#cfdae4",
+    paddingBottom: 15,
   },
   name: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 700,
-    color: "#172334",
-    marginBottom: 3,
+    color: "#17344f",
+    marginBottom: 6,
   },
   contact: {
-    fontSize: 8.5,
-    color: "#475569",
+    fontSize: 8.7,
+    color: "#526778",
+    lineHeight: 1.55,
   },
   section: {
-    marginBottom: 9,
+    marginBottom: 15,
   },
   sectionTitle: {
-    fontSize: 10,
+    fontSize: 10.2,
     fontWeight: 700,
-    color: "#172334",
-    marginBottom: 4,
-    paddingBottom: 3,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#cbd5e1",
+    color: "#17344f",
+    marginBottom: 8,
+    paddingBottom: 5,
+    borderBottomWidth: 0.7,
+    borderBottomColor: "#d3dee8",
   },
   paragraph: {
-    lineHeight: 1.4,
+    lineHeight: 1.55,
   },
   item: {
-    marginBottom: 6,
+    marginBottom: 12,
   },
   itemTitle: {
     fontWeight: 700,
-    fontSize: 9.5,
+    fontSize: 10,
+    color: "#1c354c",
+    marginBottom: 2,
+  },
+  company: {
+    fontSize: 9.2,
+    color: "#324b61",
+    marginBottom: 1,
   },
   secondary: {
-    color: "#475569",
-    fontSize: 8.5,
-    marginBottom: 2,
+    color: "#64788b",
+    fontSize: 8.3,
+    marginBottom: 4,
   },
   description: {
-    lineHeight: 1.35,
-    marginTop: 2,
+    lineHeight: 1.5,
+    marginTop: 3,
   },
   skill: {
-    marginBottom: 2,
+    marginBottom: 4,
+    lineHeight: 1.45,
+  },
+  footer: {
+    position: "absolute",
+    bottom: 22,
+    left: 46,
+    right: 46,
+    borderTopWidth: 0.5,
+    borderTopColor: "#e1e8ef",
+    paddingTop: 6,
+    color: "#8293a1",
+    fontSize: 7.5,
+    textAlign: "right",
   },
 });
 
@@ -154,19 +175,19 @@ export default function GeneratedCVDocument({
 
   const labels = en
     ? {
-        summary: "Professional Summary",
-        experience: "Work Experience",
-        education: "Education",
-        skills: "Skills",
-        languages: "Languages",
+        summary: "PROFESSIONAL SUMMARY",
+        experience: "WORK EXPERIENCE",
+        education: "EDUCATION",
+        skills: "KEY SKILLS",
+        languages: "LANGUAGES",
         present: "Present",
       }
     : {
-        summary: "Rezumat profesional",
-        experience: "Experiență profesională",
-        education: "Educație și studii",
-        skills: "Competențe profesionale",
-        languages: "Limbi străine",
+        summary: "REZUMAT PROFESIONAL",
+        experience: "EXPERIENȚĂ PROFESIONALĂ",
+        education: "EDUCAȚIE ȘI STUDII",
+        skills: "COMPETENȚE PROFESIONALE",
+        languages: "LIMBI STRĂINE",
         present: "Prezent",
       };
 
@@ -181,7 +202,7 @@ export default function GeneratedCVDocument({
     personal.city,
   ]
     .filter(Boolean)
-    .join("  |  ");
+    .join("   |   ");
 
   return (
     <Document title={`CV - ${name}`} author="CV Adapt">
@@ -195,7 +216,7 @@ export default function GeneratedCVDocument({
 
         {content.professional_summary.trim() ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
+            <Text style={styles.sectionTitle} minPresenceAhead={50}>
               {labels.summary}
             </Text>
             <Text style={styles.paragraph}>
@@ -206,7 +227,7 @@ export default function GeneratedCVDocument({
 
         {content.experiences.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
+            <Text style={styles.sectionTitle} minPresenceAhead={50}>
               {labels.experience}
             </Text>
             {content.experiences.map((item, index) => (
@@ -215,7 +236,7 @@ export default function GeneratedCVDocument({
                   <Text style={styles.itemTitle}>
                     {item.jobTitle}
                   </Text>
-                  <Text>{item.company}</Text>
+                  <Text style={styles.company}>{item.company}</Text>
                   <Text style={styles.secondary}>
                     {item.startDate} –{" "}
                     {item.current
@@ -235,7 +256,7 @@ export default function GeneratedCVDocument({
 
         {content.education.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
+            <Text style={styles.sectionTitle} minPresenceAhead={50}>
               {labels.education}
             </Text>
             {content.education.map((item, index) => (
@@ -243,7 +264,7 @@ export default function GeneratedCVDocument({
                 <Text style={styles.itemTitle}>
                   {item.institution}
                 </Text>
-                <Text>{item.degree}</Text>
+                <Text style={styles.company}>{item.degree}</Text>
                 <Text style={styles.secondary}>
                   {item.startDate} –{" "}
                   {item.ongoing
@@ -257,20 +278,16 @@ export default function GeneratedCVDocument({
 
         {content.skills.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
+            <Text style={styles.sectionTitle} minPresenceAhead={50}>
               {labels.skills}
             </Text>
-            {content.skills.map((skill, index) => (
-              <Text key={index} style={styles.skill}>
-                {skill}
-              </Text>
-            ))}
+            <Text style={styles.paragraph}>{content.skills.join("  |  ")}</Text>
           </View>
         ) : null}
 
         {content.languages.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
+            <Text style={styles.sectionTitle} minPresenceAhead={50}>
               {labels.languages}
             </Text>
             {content.languages.map((language, index) => (
@@ -280,6 +297,11 @@ export default function GeneratedCVDocument({
             ))}
           </View>
         ) : null}
+        <Text
+          style={styles.footer}
+          fixed
+          render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+        />
       </Page>
     </Document>
   );
