@@ -53,29 +53,17 @@ type Props = {
   cvLanguage: string;
 };
 
-const fontsDirectory = path.join(
-  process.cwd(),
-  "node_modules",
-  "@fontsource",
-  "noto-sans",
-  "files"
-);
+const fontsDirectory = path.join(process.cwd(), "src", "lib", "pdf", "fonts");
 
 Font.register({
-  family: "Noto Sans",
+  family: "CV Serif",
   fonts: [
     {
-      src: path.join(
-        fontsDirectory,
-        "noto-sans-latin-ext-400-normal.woff"
-      ),
+      src: path.join(fontsDirectory, "LiberationSerif-Regular.ttf"),
       fontWeight: 400,
     },
     {
-      src: path.join(
-        fontsDirectory,
-        "noto-sans-latin-ext-700-normal.woff"
-      ),
+      src: path.join(fontsDirectory, "LiberationSerif-Bold.ttf"),
       fontWeight: 700,
     },
   ],
@@ -85,85 +73,80 @@ Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
   page: {
-    fontFamily: "Noto Sans",
-    fontSize: 9.5,
-    color: "#263747",
-    paddingTop: 42,
-    paddingBottom: 48,
-    paddingHorizontal: 46,
-    lineHeight: 1.45,
+    fontFamily: "CV Serif",
+    fontSize: 10,
+    color: "#202020",
+    paddingTop: 38,
+    paddingBottom: 42,
+    paddingHorizontal: 34,
+    lineHeight: 1.22,
   },
   header: {
-    marginBottom: 19,
-    borderBottomWidth: 1.3,
-    borderBottomColor: "#cfdae4",
-    paddingBottom: 15,
+    marginBottom: 17,
+    alignItems: "center",
   },
   name: {
-    fontSize: 22,
+    fontSize: 13.5,
     fontWeight: 700,
-    color: "#17344f",
-    marginBottom: 6,
+    textAlign: "center",
+    marginBottom: 8,
   },
   contact: {
-    fontSize: 8.7,
-    color: "#526778",
-    lineHeight: 1.55,
+    fontSize: 9.2,
+    textAlign: "center",
   },
   section: {
-    marginBottom: 15,
+    marginBottom: 13,
+    paddingTop: 8,
+    borderTopWidth: 0.8,
+    borderTopColor: "#303030",
   },
   sectionTitle: {
-    fontSize: 10.2,
-    fontWeight: 700,
-    color: "#17344f",
-    marginBottom: 8,
-    paddingBottom: 5,
-    borderBottomWidth: 0.7,
-    borderBottomColor: "#d3dee8",
+    fontSize: 10,
+    letterSpacing: 1.1,
+    width: "25%",
+    paddingRight: 12,
   },
   paragraph: {
-    lineHeight: 1.55,
+    lineHeight: 1.23,
   },
   item: {
-    marginBottom: 12,
+    marginBottom: 11,
   },
   itemTitle: {
     fontWeight: 700,
     fontSize: 10,
-    color: "#1c354c",
     marginBottom: 2,
   },
   company: {
-    fontSize: 9.2,
-    color: "#324b61",
-    marginBottom: 1,
+    fontSize: 9.5,
+    marginBottom: 2,
   },
   secondary: {
-    color: "#64788b",
-    fontSize: 8.3,
-    marginBottom: 4,
+    fontSize: 9,
+    marginBottom: 3,
   },
   description: {
-    lineHeight: 1.5,
+    lineHeight: 1.23,
     marginTop: 3,
   },
   skill: {
     marginBottom: 4,
-    lineHeight: 1.45,
+    lineHeight: 1.23,
   },
   footer: {
     position: "absolute",
-    bottom: 22,
-    left: 46,
-    right: 46,
-    borderTopWidth: 0.5,
-    borderTopColor: "#e1e8ef",
-    paddingTop: 6,
-    color: "#8293a1",
-    fontSize: 7.5,
+    bottom: 19,
+    right: 34,
+    fontSize: 8,
     textAlign: "right",
   },
+  sectionRow: { flexDirection: "row" },
+  sectionBody: { width: "75%" },
+  experienceRow: { flexDirection: "row", marginBottom: 10 },
+  dateColumn: { width: "25%", paddingRight: 12, fontSize: 9 },
+  experienceBody: { width: "75%" },
+  skillColumn: { width: "50%", paddingRight: 10, marginBottom: 4 },
 });
 
 export default function GeneratedCVDocument({
@@ -176,9 +159,9 @@ export default function GeneratedCVDocument({
   const labels = en
     ? {
         summary: "PROFESSIONAL SUMMARY",
-        experience: "WORK EXPERIENCE",
+        experience: "EMPLOYMENT HISTORY",
         education: "EDUCATION",
-        skills: "KEY SKILLS",
+        skills: "AREAS OF EXPERTISE",
         languages: "LANGUAGES",
         present: "Present",
       }
@@ -197,12 +180,12 @@ export default function GeneratedCVDocument({
       .join(" ") || "Curriculum Vitae";
 
   const contact = [
-    personal.email,
-    personal.phone,
     personal.city,
+    personal.phone,
+    personal.email,
   ]
     .filter(Boolean)
-    .join("   |   ");
+    .join("  |  ");
 
   return (
     <Document title={`CV - ${name}`} author="CV Adapt">
@@ -216,39 +199,50 @@ export default function GeneratedCVDocument({
 
         {content.professional_summary.trim() ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle} minPresenceAhead={50}>
-              {labels.summary}
-            </Text>
-            <Text style={styles.paragraph}>
-              {content.professional_summary}
-            </Text>
+            <View style={styles.sectionRow}>
+              <Text style={styles.sectionTitle}>{labels.summary}</Text>
+              <View style={styles.sectionBody}>
+                <Text style={styles.paragraph}>{content.professional_summary}</Text>
+              </View>
+            </View>
+          </View>
+        ) : null}
+
+        {content.skills.length > 0 ? (
+          <View style={styles.section}>
+            <View style={styles.sectionRow}>
+              <Text style={styles.sectionTitle}>{labels.skills}</Text>
+              <View style={[styles.sectionBody, { flexDirection: "row", flexWrap: "wrap" }]}>
+                {content.skills.map((skill, index) => (
+                  <Text key={index} style={styles.skillColumn}>{skill}</Text>
+                ))}
+              </View>
+            </View>
           </View>
         ) : null}
 
         {content.experiences.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle} minPresenceAhead={50}>
+            <Text style={[styles.sectionTitle, { width: "100%", marginBottom: 9 }]} minPresenceAhead={50}>
               {labels.experience}
             </Text>
             {content.experiences.map((item, index) => (
-              <View key={index} style={styles.item}>
-                <View wrap={false}>
-                  <Text style={styles.itemTitle}>
-                    {item.jobTitle}
-                  </Text>
-                  <Text style={styles.company}>{item.company}</Text>
-                  <Text style={styles.secondary}>
+              <View key={index} style={styles.experienceRow}>
+                <Text style={styles.dateColumn}>
                     {item.startDate} –{" "}
                     {item.current
                       ? labels.present
                       : item.endDate}
-                  </Text>
+                </Text>
+                <View style={styles.experienceBody}>
+                  <View wrap={false}>
+                    <Text style={styles.itemTitle}>{item.company}</Text>
+                    <Text style={styles.company}>{item.jobTitle}</Text>
+                  </View>
+                  {item.description ? (
+                    <Text style={styles.description}>{item.description}</Text>
+                  ) : null}
                 </View>
-                {item.description ? (
-                  <Text style={styles.description}>
-                    {item.description}
-                  </Text>
-                ) : null}
               </View>
             ))}
           </View>
@@ -256,51 +250,44 @@ export default function GeneratedCVDocument({
 
         {content.education.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle} minPresenceAhead={50}>
+            <Text style={[styles.sectionTitle, { width: "100%", marginBottom: 9 }]} minPresenceAhead={50}>
               {labels.education}
             </Text>
             {content.education.map((item, index) => (
-              <View key={index} style={styles.item} wrap={false}>
-                <Text style={styles.itemTitle}>
-                  {item.institution}
-                </Text>
-                <Text style={styles.company}>{item.degree}</Text>
-                <Text style={styles.secondary}>
+              <View key={index} style={styles.experienceRow} wrap={false}>
+                <Text style={styles.dateColumn}>
                   {item.startDate} –{" "}
                   {item.ongoing
                     ? labels.present
                     : item.endDate}
                 </Text>
+                <View style={styles.experienceBody}>
+                  <Text style={styles.itemTitle}>{item.degree}</Text>
+                  <Text style={styles.company}>{item.institution}</Text>
+                </View>
               </View>
             ))}
           </View>
         ) : null}
 
-        {content.skills.length > 0 ? (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle} minPresenceAhead={50}>
-              {labels.skills}
-            </Text>
-            <Text style={styles.paragraph}>{content.skills.join("  |  ")}</Text>
-          </View>
-        ) : null}
-
         {content.languages.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle} minPresenceAhead={50}>
-              {labels.languages}
-            </Text>
-            {content.languages.map((language, index) => (
-              <Text key={index} style={styles.skill}>
-                {language.name} — {language.level}
-              </Text>
-            ))}
+            <View style={styles.sectionRow}>
+              <Text style={styles.sectionTitle}>{labels.languages}</Text>
+              <View style={styles.sectionBody}>
+                {content.languages.map((language, index) => (
+                  <Text key={index} style={styles.skill}>
+                    {language.name} — {language.level}
+                  </Text>
+                ))}
+              </View>
+            </View>
           </View>
         ) : null}
         <Text
           style={styles.footer}
           fixed
-          render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+          render={({ pageNumber }) => `Page ${pageNumber}`}
         />
       </Page>
     </Document>
