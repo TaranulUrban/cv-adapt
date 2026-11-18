@@ -76,13 +76,13 @@ const styles = StyleSheet.create({
     fontFamily: "CV Serif",
     fontSize: 10,
     color: "#202020",
-    paddingTop: 38,
-    paddingBottom: 42,
+    paddingTop: 35,
+    paddingBottom: 32,
     paddingHorizontal: 34,
-    lineHeight: 1.22,
+    lineHeight: 1.12,
   },
   header: {
-    marginBottom: 17,
+    marginBottom: 14,
     alignItems: "center",
   },
   name: {
@@ -96,22 +96,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   section: {
-    marginBottom: 13,
-    paddingTop: 8,
+    marginBottom: 9,
+    paddingTop: 7,
     borderTopWidth: 0.8,
     borderTopColor: "#303030",
   },
   sectionTitle: {
     fontSize: 10,
-    letterSpacing: 1.1,
+    letterSpacing: 0.45,
     width: "25%",
     paddingRight: 12,
   },
   paragraph: {
-    lineHeight: 1.23,
+    lineHeight: 1.12,
   },
   item: {
-    marginBottom: 11,
+    marginBottom: 7,
   },
   itemTitle: {
     fontWeight: 700,
@@ -127,12 +127,12 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   description: {
-    lineHeight: 1.23,
-    marginTop: 3,
+    lineHeight: 1.12,
+    marginTop: 2,
   },
   skill: {
-    marginBottom: 4,
-    lineHeight: 1.23,
+    marginBottom: 2,
+    lineHeight: 1.12,
   },
   footer: {
     position: "absolute",
@@ -143,11 +143,47 @@ const styles = StyleSheet.create({
   },
   sectionRow: { flexDirection: "row" },
   sectionBody: { width: "75%" },
-  experienceRow: { flexDirection: "row", marginBottom: 10 },
+  experienceRow: { flexDirection: "row", marginBottom: 7 },
   dateColumn: { width: "25%", paddingRight: 12, fontSize: 9 },
   experienceBody: { width: "75%" },
-  skillColumn: { width: "50%", paddingRight: 10, marginBottom: 4 },
+  skillColumn: { width: "50%", paddingRight: 10, marginBottom: 2 },
+  bulletRow: { flexDirection: "row", marginTop: 2 },
+  bulletSymbol: { width: 11 },
+  bulletText: { flex: 1, lineHeight: 1.12 },
 });
+
+function formatDate(value: string, en: boolean): string {
+  const match = /^(\d{4})-(\d{2})(?:-\d{2})?$/.exec(value.trim());
+  if (!match) return value;
+  const month = Number(match[2]);
+  if (month < 1 || month > 12) return value;
+  return new Intl.DateTimeFormat(en ? "en-GB" : "ro-RO", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(Number(match[1]), month - 1, 1)));
+}
+
+function formatRange(start: string, end: string, current: boolean, present: string, en: boolean): string {
+  return [formatDate(start, en), current ? present : formatDate(end, en)]
+    .filter(Boolean)
+    .join(" – ");
+}
+
+function Description({ value }: { value: string }) {
+  const entries = value.split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean);
+  if (entries.length < 2) return <Text style={styles.description}>{value}</Text>;
+  return (
+    <View style={styles.description}>
+      {entries.map((entry, index) => (
+        <View key={index} style={styles.bulletRow}>
+          <Text style={styles.bulletSymbol}>•</Text>
+          <Text style={styles.bulletText}>{entry.replace(/^[•*-]\s*/, "")}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
 
 export default function GeneratedCVDocument({
   personal,
@@ -223,25 +259,18 @@ export default function GeneratedCVDocument({
 
         {content.experiences.length > 0 ? (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { width: "100%", marginBottom: 9 }]} minPresenceAhead={50}>
+            <Text style={[styles.sectionTitle, { width: "100%", marginBottom: 6 }]} minPresenceAhead={45}>
               {labels.experience}
             </Text>
             {content.experiences.map((item, index) => (
               <View key={index} style={styles.experienceRow}>
-                <Text style={styles.dateColumn}>
-                    {item.startDate} –{" "}
-                    {item.current
-                      ? labels.present
-                      : item.endDate}
-                </Text>
+                <Text style={styles.dateColumn}>{formatRange(item.startDate, item.endDate, item.current, labels.present, en)}</Text>
                 <View style={styles.experienceBody}>
                   <View wrap={false}>
                     <Text style={styles.itemTitle}>{item.company}</Text>
                     <Text style={styles.company}>{item.jobTitle}</Text>
                   </View>
-                  {item.description ? (
-                    <Text style={styles.description}>{item.description}</Text>
-                  ) : null}
+                  {item.description?.trim() ? <Description value={item.description} /> : null}
                 </View>
               </View>
             ))}
@@ -250,17 +279,12 @@ export default function GeneratedCVDocument({
 
         {content.education.length > 0 ? (
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { width: "100%", marginBottom: 9 }]} minPresenceAhead={50}>
+            <Text style={[styles.sectionTitle, { width: "100%", marginBottom: 6 }]} minPresenceAhead={45}>
               {labels.education}
             </Text>
             {content.education.map((item, index) => (
               <View key={index} style={styles.experienceRow} wrap={false}>
-                <Text style={styles.dateColumn}>
-                  {item.startDate} –{" "}
-                  {item.ongoing
-                    ? labels.present
-                    : item.endDate}
-                </Text>
+                <Text style={styles.dateColumn}>{formatRange(item.startDate, item.endDate, item.ongoing, labels.present, en)}</Text>
                 <View style={styles.experienceBody}>
                   <Text style={styles.itemTitle}>{item.degree}</Text>
                   <Text style={styles.company}>{item.institution}</Text>
@@ -275,11 +299,9 @@ export default function GeneratedCVDocument({
             <View style={styles.sectionRow}>
               <Text style={styles.sectionTitle}>{labels.languages}</Text>
               <View style={styles.sectionBody}>
-                {content.languages.map((language, index) => (
-                  <Text key={index} style={styles.skill}>
-                    {language.name} — {language.level}
-                  </Text>
-                ))}
+                <Text style={styles.skill}>
+                  {content.languages.map((language) => `${language.name} — ${language.level}`).join("   |   ")}
+                </Text>
               </View>
             </View>
           </View>
