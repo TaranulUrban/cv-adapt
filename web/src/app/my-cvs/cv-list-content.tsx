@@ -54,6 +54,11 @@ export default async function MyCVsPage() {
           className="mt-6 inline-block text-sm text-[#d8432a] hover:underline"
         >{uiText(locale, "Vezi CV-urile generate cu AI →")}</Link>
 
+        <Link
+          href="/generated-cvs/new"
+          className="ml-0 mt-3 block text-sm font-semibold text-[#d8432a] hover:underline sm:ml-5 sm:inline-block"
+        >{locale === "en" ? "Generate a CV with AI →" : "Generează un CV cu AI →"}</Link>
+
         {error ? (
           <p
             role="alert"

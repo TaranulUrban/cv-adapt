@@ -49,7 +49,7 @@ async function GeneratedCVsContent() {
   const { data: generatedCVs, error } = await supabase
     .from("generated_cvs")
     .select(
-      "id, original_cv_id, cv_language, ai_model, created_at"
+      "id, original_cv_id, job_description, cv_language, ai_model, created_at"
     )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
@@ -74,13 +74,18 @@ async function GeneratedCVsContent() {
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Link
+            href="/generated-cvs/new"
+            className="rounded-lg bg-[#ef5135] px-4 py-3 text-center text-sm font-medium text-white hover:bg-[#d8432a]"
+          >{locale === "en" ? "+ Generate CV with AI" : "+ Generează CV cu AI"}</Link>
+
+          <Link
             href="/my-cvs"
             className="rounded-lg border border-slate-300 px-4 py-3 text-sm font-medium hover:bg-orange-50"
           >{uiText(locale, "CV-urile originale")}</Link>
 
           <Link
             href="/cv"
-            className="rounded-lg bg-[#ef5135] px-4 py-3 text-sm font-medium hover:bg-[#d8432a] text-white"
+            className="rounded-lg border border-slate-300 px-4 py-3 text-center text-sm font-medium hover:bg-orange-50"
           >{uiText(locale, "+ Creează CV nou")}</Link>
         </div>
 
@@ -96,7 +101,11 @@ async function GeneratedCVsContent() {
                 key={cv.id}
                 className="rounded-xl border border-slate-200 bg-white p-4 sm:p-6"
               >
-                <h2 className="text-lg font-semibold">{uiText(locale, "CV adaptat cu AI")}</h2>
+                <h2 className="text-lg font-semibold">
+                  {typeof cv.job_description === "string" && cv.job_description.startsWith("Job title: ")
+                    ? cv.job_description.split("\n", 1)[0].replace("Job title: ", "")
+                    : uiText(locale, "CV adaptat cu AI")}
+                </h2>
 
                 <p className="mt-3 text-sm text-slate-500">
                   {uiText(locale, "Generat la:")}{" "}
